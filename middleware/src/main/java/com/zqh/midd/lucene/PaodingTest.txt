@@ -1,0 +1,67 @@
+package com.zqh.hadoop.dataguru.week07_token;
+
+import net.paoding.analysis.analyzer.PaodingAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.highlight.Formatter;
+import org.apache.lucene.search.highlight.TokenGroup;
+import org.apache.lucene.search.highlight.TokenSources;
+import org.apache.mahout.math.neighborhood.Searcher;
+import org.neo4j.index.impl.lucene.Hits;
+
+/**
+ * Created by hadoop on 15-1-22.
+ */
+public class PaodingTest {
+
+    public static void main(String[] args) throws Exception{
+        String IDNEX_PATH = "E:/paoding_test_index";
+//获取Paoding中文分词器
+        Analyzer analyzer = new PaodingAnalyzer();
+//建立索引
+        IndexWriter writer = new IndexWriter(IDNEX_PATH, analyzer);
+        Document doc = new Document();
+        Field field = new Field("content", "你好，世界!", Field.Store.YES,
+                Field.Index.TOKENIZED, Field.TermVector.WITH_POSITIONS_OFFSETS);
+        doc.add(field);
+        writer.addDocument(doc);
+        writer.close();
+        System.out.println("Indexed success!");
+
+//检索
+        IndexReader reader = IndexReader.open(IDNEX_PATH);
+        QueryParser parser = new QueryParser("content", analyzer);
+        Query query = parser.parse("你好");
+        Searcher searcher = new IndexSearcher(reader);
+        Hits hits = searcher.search(query);
+        if (hits.length() == 0) {
+            System.out.println("hits.length=0");
+        }
+        Document doc2 = hits.doc(0);
+//高亮处理
+        String text = doc2.get("content");
+        TermPositionVector tpv = (TermPositionVector) reader.getTermFreqVector(
+                0, "content");
+        TokenStream ts = TokenSources.getTokenStream(tpv);
+        Formatter formatter = new Formatter() {
+            public String highlightTerm(String srcText, TokenGroup g) {
+                if (g.getTotalScore() <= 0) {
+                    return srcText;
+                }
+                return "<b>" + srcText + "</b>";
+            }
+        };
+        Highlighter highlighter = new Highlighter(formatter, new QueryScorer(
+                query));
+        String result = highlighter.getBestFragments(ts, text, 5, "…");
+        System.out.println("result:\n\t" + result);
+        reader.close();
+    }
+}

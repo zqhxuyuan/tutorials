@@ -1,0 +1,7 @@
+https://github.com/mjpt777/rw-concurrency
+
+http://caoyaojun1988-163-com.iteye.com/blog/1960078
+
+Various lock-based and lock-free algorithms tested for multiple readers and writers scenarios.
+
+The purpose is to show the performance of different approaches.

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <property file="/home/benimaur/workspace/tc/trinity/manager/aris.properties" />
+
+  <appender name="sqllog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${logback.appender.sqllog.file_dynamic}</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logback.appender.sqllog.rolling_file_pattern_dynamic}</fileNamePattern>
+    </rollingPolicy>
+    <append>true</append>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>${logback.appender.sqllog.pattern_dynamic}</pattern>
+    </encoder>
+  </appender>
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${logback.appender.stdout.pattern_dynamic}</pattern>
+    </encoder>
+  </appender>
+  <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${logback.appender.logfile.file_dynamic}</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logback.appender.sqllog.rolling_file_pattern_dynamic}</fileNamePattern>
+    </rollingPolicy>
+    <append>true</append>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>${logback.appender.logfile.pattern_dynamic}</pattern>
+    </encoder>
+  </appender>
+  <logger name="com.ibatis" level="${logback.logger.com.ibatis.level_dynamic}"/>
+  <logger name="java.sql.PreparedStatement" level="${logback.logger.java.sql.PreparedStatement.level_dynamic}">
+    <appender-ref ref="sqllog"/>
+  </logger>
+  <logger name="net.rubyeye.xmemcached" level="${logback.logger.net.rubyeye.xmemcached.level_dynamic}"/>
+  <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="${logback.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate.level_dynamic}"/>
+  <logger name="java.sql">
+  	<level value="${logback.logger.java.sql.level_dynamic}" />
+    <appender-ref ref="sqllog"/>
+  </logger>
+  <logger name="java.sql.Statement" level="${logback.logger.java.sql.Statement.level_dynamic}"/>
+  <logger name="com.google.code.yanf4j.core" level="${logback.logger.com.google.code.yanf4j.core.level_dynamic}"/>
+  <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="${logback.logger.com.ibatis.common.jdbc.SimpleDataSource.level_dynamic}"/>
+  <logger name="com.ibatis.common.jdbc.ScriptRunner" level="${logback.logger.com.ibatis.common.jdbc.ScriptRunner.level_dynamic}"/>
+  <logger name="java.sql.Connection" level="logback.logger.java.sql.Connection.level_dynamic"/>
+  <root level="${logback.logger.root.level_dynamic}">
+    <appender-ref ref="stdout"/>
+    <appender-ref ref="logfile"/>
+  </root>
+</configuration>

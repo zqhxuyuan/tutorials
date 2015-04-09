@@ -1,0 +1,26 @@
+                What            DataStructureUsed
+01.bitcask      KVStore
+
+02.dmap         KVStore
+
+03.tkv          TagKVStore
+
+04.fkv          FastKVStore
+
+05.FLRMI        RMI             DynamicProxy+DynamicInvoke
+
+06.JMessenger   PubSub          BlockingQueue+Map
+
+07.Nonheapdb    KVStore         ByteBuffer+TreeSet
+
+TODO READING
+
+kvstore
+
+mcache
+
+helloworld : design pattern
+
+ods : java data structure
+
+lambdasinaction : java8
