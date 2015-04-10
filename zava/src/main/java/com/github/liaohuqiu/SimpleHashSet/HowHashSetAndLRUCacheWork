@@ -1,0 +1,12 @@
+## HashSet
+
+数组实现
+
+## LRUCache
+
+                    构造              入队             出队          追加写
+Action + CacheEntry ==> ActionMessage ==> ActionQueue <== ActionLog ==> journal file
+                                          |__run()__|
+
+
+节点的回收采用next指针组成一个空闲链表

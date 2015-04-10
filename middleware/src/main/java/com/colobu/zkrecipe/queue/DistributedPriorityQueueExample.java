@@ -13,6 +13,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.utils.CloseableUtils;
 
+/**
+ * 优先级队列对队列中的元素按照优先级进行排序。 Priority越小， 元素越靠前， 越先被消费掉。
+ */
 public class DistributedPriorityQueueExample {
 	private static final String PATH = "/example/queue";
 
@@ -38,6 +41,7 @@ public class DistributedPriorityQueueExample {
 			for (int i = 0; i < 10; i++) {
 				int priority = (int)(Math.random() * 100);
 				System.out.println("test-" + i + " priority:" + priority);
+                //放入队列时需要指定优先级
 				queue.put("test-" + i, priority);
 				Thread.sleep((long)(50 * Math.random()));
 			}

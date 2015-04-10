@@ -9,6 +9,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.utils.CloseableUtils;
 
+/**
+ * 提供了和JDK一致性的接口(但是没有实现Queue接口)
+ */
 public class SimpleDistributedQueueExample {
 	private static final String PATH = "/example/queue";
 

@@ -79,8 +79,14 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
         return mSize;
     }
 
+    /**
+     * 删除一个元素
+     * @param key 要删除的元素
+     * @return 是否删除成功
+     */
     @Override
     public boolean remove(Object key) {
+        //删除空的元素
         if (key == null) {
             if (mEntryForNull == null) {
                 return false;
@@ -90,20 +96,31 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
                 return true;
             }
         }
+        //计算key在数组中的索引
         int hash = secondaryHash(key);
         SimpleHashSetEntry<T>[] tab = mTable;
+        //hash值要和数组长度进行与运算,才能得到在数组中的索引位置
         int index = hash & (tab.length - 1);
+        //一旦有hash计算,就有hash冲突的存在. 不同的key可能在同一个hash里.这些key会以链表的形式存放在数组的同一个索引位置
+        //e表示数组索引位置中链表的第一个条目, 如果第一个条目不是我们要找的,则要循环当前条目的next指针在链表中寻找
+        //一开始prev是空,因为链表表头没有前一个条目,当到下一个元素时,prev指向的就是前一个条目
         for (SimpleHashSetEntry<T> e = tab[index], prev = null; e != null; prev = e, e = e.mNext) {
             if (e.mHash == hash && key.equals(e.mKey)) {
                 if (prev == null) {
+                    //链表表头的第一个元素就是我们要删除的元素,因为表头条目的prev=null
                     tab[index] = e.mNext;
                 } else {
+                    //要删除的元素不在链表表头. 现在循环到了当前要删除的元素.
+                    //则将当前元素的前一个元素的next指针指向当前元素的下一个元素.
+                    //这样当前元素就被删除了,因为没有条目引用到它了.
                     prev.mNext = e.mNext;
                 }
+                //成功删除一个条目. 注意mSize不是数组的大小, 而是条目的大小. 因为数组的一个元素会存放多个条目
                 mSize--;
                 return true;
             }
         }
+        //如果不满足for循环中的条件,或者for循环之后还没有找到这个元素,说明这个元素不在数组中!
         return false;
     }
 
@@ -111,10 +128,12 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
     public boolean add(T key) {
         if (key == null) {
             if (mEntryForNull == null) {
+                //允许添加一个空的条目?
                 mSize++;
                 mEntryForNull = new SimpleHashSetEntry<T>(0, null);
                 return true;
             }
+            //再次添加一个空的条目,则不允许了,因为只允许有一个空的条目
             return false;
         }
 
@@ -122,6 +141,7 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
         SimpleHashSetEntry<T>[] tab = mTable;
         int index = hash & (tab.length - 1);
         for (SimpleHashSetEntry<T> e = tab[index]; e != null; e = e.mNext) {
+            //在数组索引位置的链表中遍历, 如果key已经存在, 则不允许再次加入. 满足了set的含义
             if (e.mKey == key || (e.mHash == hash && e.mKey.equals(key))) {
                 return false;
             }
@@ -132,6 +152,8 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
             tab = doubleCapacity();
             index = hash & (tab.length - 1);
         }
+        //添加到数组索引位置的链表表头
+        //set不像map有value, set里的元素都是一个个的key. 所以key可以看做set里的value
         tab[index] = new SimpleHashSetEntry<T>(hash, key);
         return true;
     }
@@ -204,6 +226,7 @@ public class SimpleHashSet<T> extends AbstractSet<T> implements Set<T>, Cloneabl
         }
         int hash = secondaryHash(key);
         SimpleHashSetEntry<T>[] tab = mTable;
+        //是否包含key的操作和add中还没添加条目之前的操作是一样的, 都是遍历链表
         for (SimpleHashSetEntry<T> e = tab[hash & (tab.length - 1)]; e != null; e = e.mNext) {
             if (e.mKey == key || (e.mHash == hash && e.mKey.equals(key))) {
                 return true;

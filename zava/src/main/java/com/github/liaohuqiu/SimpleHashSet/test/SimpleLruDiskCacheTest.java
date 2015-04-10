@@ -46,8 +46,11 @@ public class SimpleLruDiskCacheTest extends TestCase {
         String key = "test-write-then-commit";
         String content = "testWriteThenCommit";
         try {
+            //开始编辑
             CacheEntry cacheEntry = mCache.beginEdit(key);
+            //写数据
             cacheEntry.setString(content);
+            //结束编辑
             cacheEntry.commit();
             assertEquals(mCache.has(key), true);
             assertEquals("cache file should exits", cacheFileExists(key), true);

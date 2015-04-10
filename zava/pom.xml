@@ -61,7 +61,6 @@
             <artifactId>objenesis</artifactId>
             <version>2.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.esotericsoftware.kryo</groupId>
             <artifactId>kryo</artifactId>
@@ -80,7 +79,7 @@
             <version>2.6.0</version>
         </dependency>
 
-        <!--com.ibm.jasm.asm-->
+        <!--com.ibm-->
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr-runtime</artifactId>

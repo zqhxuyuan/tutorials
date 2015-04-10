@@ -15,6 +15,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.utils.CloseableUtils;
 
+/**
+ * 延迟队列:消费者隔一段时间才能收到元素
+ */
 public class DistributedDelayQueueExample {
 	private static final String PATH = "/example/queue";
 
@@ -38,6 +41,8 @@ public class DistributedDelayQueueExample {
 			queue.start();
 			
 			for (int i = 0; i < 10; i++) {
+                //放入元素时可以指定delayUntilEpoch
+                //如果delayUntilEpoch的时间已经过去，消息会立刻被消费者接收
 				queue.put("test-" + i, System.currentTimeMillis() + 10000);
 			}
 			System.out.println(new Date().getTime() + ": already put all items");

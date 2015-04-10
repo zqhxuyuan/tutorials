@@ -14,9 +14,9 @@ public class TestCol {
 
     public static void main(String[] args) {
         //testLinkedList();
-
         //testRange();
-        testBinarySearch();
+        //testBinarySearch();
+        testBitOps();
     }
 
     public static void testBinarySearch(){
@@ -65,6 +65,17 @@ public class TestCol {
                 System.out.println("Int:" + (Integer.MAX_VALUE == maxValue) + (Integer.MIN_VALUE == minValue));
             }
         }
+    }
+
+    public static void testBitOps(){
+        // 3/4 threshold
+        int capacity = 16;
+        int threshold = (capacity >> 1) + (capacity >> 2);
+        System.out.println(threshold == capacity * 3/4);
+
+        capacity = 48;
+        threshold = (capacity >> 1) + (capacity >> 2);
+        System.out.println(threshold == capacity * 3/4);
     }
 
     public static void testPutMap(){

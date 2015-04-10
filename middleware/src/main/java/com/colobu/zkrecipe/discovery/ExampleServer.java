@@ -23,18 +23,17 @@ public class ExampleServer implements Closeable {
 	private final ServiceInstance<InstanceDetails> thisInstance;
 
 	public ExampleServer(CuratorFramework client, String path, String serviceName, String description) throws Exception {
-		// in a real application, you'd have a convention of some kind for the
-		// URI layout
+		// in a real application, you'd have a convention of some kind for the URI layout
 		UriSpec uriSpec = new UriSpec("{scheme}://foo.com:{port}");
-		thisInstance = ServiceInstance.<InstanceDetails> builder().name(serviceName).payload(new InstanceDetails(description))
-				.port((int) (65535 * Math.random())) // in a real application,
-														// you'd use a common
-														// port
+		thisInstance = ServiceInstance.<InstanceDetails> builder().name(serviceName)
+                .payload(new InstanceDetails(description))
+				.port((int) (65535 * Math.random())) // in a real application, you'd use a common port
 				.uriSpec(uriSpec).build();
-		// if you mark your payload class with @JsonRootName the provided
-		// JsonInstanceSerializer will work
+
+		// if you mark your payload class with @JsonRootName the provided JsonInstanceSerializer will work
 		JsonInstanceSerializer<InstanceDetails> serializer = new JsonInstanceSerializer<InstanceDetails>(InstanceDetails.class);
-		serviceDiscovery = ServiceDiscoveryBuilder.builder(InstanceDetails.class).client(client).basePath(path).serializer(serializer)
+		serviceDiscovery = ServiceDiscoveryBuilder.builder(InstanceDetails.class)
+                .client(client).basePath(path).serializer(serializer)
 				.thisInstance(thisInstance).build();
 	}
 
