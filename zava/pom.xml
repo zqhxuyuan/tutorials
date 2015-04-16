@@ -78,6 +78,11 @@
             <artifactId>hadoop-client</artifactId>
             <version>2.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all-server</artifactId>
+            <version>8.1.16.v20140903</version>
+        </dependency>
 
         <!--com.ibm-->
         <dependency>

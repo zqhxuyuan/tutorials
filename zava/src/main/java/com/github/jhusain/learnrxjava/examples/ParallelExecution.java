@@ -23,19 +23,31 @@ public class ParallelExecution {
         System.out.println("------------");
     }
 
+    //异步合并
     private static void mergingAsync() {
-        Observable.merge(getDataAsync(1), getDataAsync(2)).toBlocking().forEach(System.out::println);
+        Observable.merge(
+                getDataAsync(1),
+                getDataAsync(2))
+                .toBlocking().forEach(System.out::println);
     }
 
+    //同步合并
     private static void mergingSync() {
         // here you'll see the delay as each is executed synchronously
-        Observable.merge(getDataSync(1), getDataSync(2)).toBlocking().forEach(System.out::println);
+        Observable.merge(
+                getDataSync(1),
+                getDataSync(2))
+                .toBlocking().forEach(System.out::println);
     }
 
+    //使用异步线程合并
     private static void mergingSyncMadeAsync() {
         // if you have something synchronous and want to make it async, you can schedule it like this
         // so here we see both executed concurrently
-        Observable.merge(getDataSync(1).subscribeOn(Schedulers.io()), getDataSync(2).subscribeOn(Schedulers.io())).toBlocking().forEach(System.out::println);
+        Observable.merge(
+                getDataSync(1).subscribeOn(Schedulers.io()),
+                getDataSync(2).subscribeOn(Schedulers.io()))
+                .toBlocking().forEach(System.out::println);
     }
 
     private static void flatMapExampleAsync() {

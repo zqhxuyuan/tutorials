@@ -25,6 +25,11 @@
         <zookeeper.version>3.4.5</zookeeper.version>
         <netty.version>4.0.25.Final</netty.version>
         <spring.version>4.0.9.RELEASE</spring.version>
+
+        <!--需要的话在自己的项目中引入相应的maven编译插件-->
+        <clojure.version>1.5.1</clojure.version>
+        <scala.version>2.10.4</scala.version>
+        <scala.bin.version>2.10</scala.bin.version>
     </properties>
 
     <dependencies>
@@ -182,6 +187,7 @@
         </dependency>
 
         <!--WEB-->
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all-server</artifactId>
@@ -204,6 +210,7 @@
             <artifactId>javassist</artifactId>
             <version>3.12.1.GA</version>
         </dependency>
+        -->
 
         <!--JSON-->
         <dependency>
@@ -322,7 +329,6 @@
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>

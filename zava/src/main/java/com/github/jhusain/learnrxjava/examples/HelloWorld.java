@@ -9,52 +9,55 @@ import rx.schedulers.Schedulers;
 public class HelloWorld {
 
     public static void main(String[] args) {
-
-        // Hello World
-        Observable.create(subscriber -> {
-            subscriber.onNext("Hello World!");
-            subscriber.onCompleted();
-        }).subscribe(System.out::println);
-
-        // shorten by using helper method
-        Observable.just("Hello", "World!")
-                .subscribe(System.out::println);
-
-        // add onError and onComplete listeners
-        Observable.just("Hello World!")
-                .subscribe(System.out::println,
-                        Throwable::printStackTrace,
-                        () -> System.out.println("Done"));
-
-        // expand to show full classes
+        // expand to show full classes 最原始的版本, 采用匿名内部类
+        // publisher and subscriber. subscriber subscribe specify events,
+        // when publisher send msg to a event, then the event's subscribers will get the msg.
+        // To the RxJava world. we hide the publisher.
+        // when create Observable, we means create a observer on the event 在事件上创建一个观察者
+        // the create method's parameter is OnSubscribe means subscribe on the event 订阅某个事件
+        // so the call method parameter is Subscribe object means we have an subscriber on this event
+        // but where is the subscriber? there are in subscribe method which is a anonymous inner class
+        // so now, we have a Subscriber, and an event, the the onSubscribe calling method
         Observable.create(new OnSubscribe<String>() {
-
+            //可以认为call是publish,会往subscribe发送消息
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 subscriber.onNext("Hello World!");
                 subscriber.onCompleted();
             }
-
-        }).subscribe(new Subscriber<String>() {
-
+        }).subscribe(new Subscriber<String>() {  // Subscriber
             @Override
             public void onCompleted() {
                 System.out.println("Done");
             }
-
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
             }
-
             @Override
             public void onNext(String t) {
                 System.out.println(t);
             }
-
         });
 
-        // add error propagation
+        // Hello World. function style, lambda version
+        Observable.create(subscriber -> {
+            //回调
+            subscriber.onNext("Hello World!");
+            subscriber.onCompleted();
+        }).subscribe(System.out::println); //订阅到消息后的处理方式
+
+        // shorten by using helper method
+        Observable.just("Hello", "World!") //回调中只有一个onNext方法时,可以直接省略
+                .subscribe(System.out::println);  //只有一个参数时,是onNext
+
+        // add onError and onComplete listeners
+        Observable.just("Hello World!")
+                .subscribe(System.out::println,   //onNext
+                        Throwable::printStackTrace, //onError
+                        () -> System.out.println("Done")); //onComplete
+
+        // add error propagation 添加抛出异常的处理逻辑
         Observable.create(subscriber -> {
             try {
                 subscriber.onNext("Hello World!");
@@ -64,8 +67,9 @@ public class HelloWorld {
             }
         }).subscribe(System.out::println);
 
-        // add concurrency (manually)
+        // add concurrency (manually) 手动加入并发/多线程, 实际上是参见一个新的线程
         Observable.create(subscriber -> {
+            //因为Runnable接口的run方法没有参数, 所以参数用()表示, 对应的Action是Action0
             new Thread(() -> {
                 try {
                     subscriber.onNext(getData());
@@ -76,7 +80,7 @@ public class HelloWorld {
             }).start();
         }).subscribe(System.out::println);
 
-        // add concurrency (using a Scheduler)
+        // add concurrency (using a Scheduler) 使用调度器引入并发/多线程
         Observable.create(subscriber -> {
             try {
                 subscriber.onNext(getData());
@@ -84,7 +88,7 @@ public class HelloWorld {
             } catch (Exception e) {
                 subscriber.onError(e);
             }
-        }).subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())  // 并发!
                 .subscribe(System.out::println);
 
         // add operator
@@ -96,6 +100,8 @@ public class HelloWorld {
                 subscriber.onError(e);
             }
         }).subscribeOn(Schedulers.io())
+                // 添加一个操作算子:Map映射
+                // 参数data是回调方法里的getData()的返回值, map的计算结果会传给subscribe中的sout
                 .map(data -> data + " --> at " + System.currentTimeMillis())
                 .subscribe(System.out::println);
 
@@ -112,7 +118,7 @@ public class HelloWorld {
                 .onErrorResumeNext(e -> Observable.just("Fallback Data"))
                 .subscribe(System.out::println);
 
-        // infinite
+        // infinite 无限数据, 但只有在调用的时候才会取数据, 避免了内存溢出: 延迟执行!
         Observable.create(subscriber -> {
             int i = 0;
             while (!subscriber.isUnsubscribed()) {

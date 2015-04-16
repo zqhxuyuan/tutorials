@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+  <!-- The nimbus.home property is the home directory where Java is installed. -->
+  <!-- Because this is system dependent, there is no default. -->
+  <property>
+    <name>java.home</name>
+    <value></value>
+  </property>
+
+  <!-- The zookeeper.quorum.servers property is a comma separated list -->
+  <!-- of the servers in a ZooKeeper Quorum. -->
+  <!-- Default value is localhost:2181 -->
+  <property>
+    <name>zookeeper.quorum.servers</name>
+    <value>localhost:2181</value>
+  </property>
+
+  <!-- The log4j.level property is the lowest level that Nimbus will log messages for.-->
+  <!-- In order from lowest to highest, values are DEBUG, INFO, WARN, ERROR, and FATAL-->
+  <!-- Default value is INFO -->
+  <property>
+    <name>log4j.level</name>
+    <value>INFO</value>
+  </property>
+
+  <!-- This property is the port that the Nimbus Master runs on. -->
+  <!-- Also, the start-master.sh reads this file to get the value. -->
+  <!-- It uses grep to find the property, so it is best not to put -->
+  <!-- property name elsewhere in this file. -->
+  <!-- Default value is 4444 -->
+  <property>
+    <name>nimbus.master.port</name>
+    <value>4444</value>
+  </property>
+
+  <!-- The nimbus.home property is the home directory where Nimbus is installed. -->
+  <!-- Default value is /usr/local/nimbus -->
+  <property>
+    <name>nimbus.home</name>
+    <value>/usr/local/nimbus</value>
+  </property>
+
+  <!-- The nimbus.ports property is a range of ports that are open and -->
+  <!-- available for the Nimbus Master to start Caches on. -->
+  <!-- The range is delimited by a hyphen (-). -->
+  <!-- Default value is 4445 -->
+  <property>
+    <name>nimbus.ports</name>
+    <value>4445</value>
+  </property>
+
+  <!-- This sets the replication factor for all Caches.  -->
+  <!-- Default value is 1. -->
+  <property>
+    <name>nimbus.replication.factor</name>
+    <value>1</value>
+  </property>
+
+  <!-- The nimbus.java.opts property is used when starting a Cache.  Any java options you put here -->
+  <!-- will be used for the JVM of each Cachelet.  Most commonly used are the -Xms and -Xmx JVM heap size options.-->
+  <!-- Default value is empty -->
+  <property>
+    <name>nimbus.java.opts</name>
+    <value></value>
+  </property>
+
+  <!-- The Nimbus Safety Net is a utility that runs in its own thread used by the Master to monitor Cachelet health. -->
+  <!-- Each Cachelet sends a heartbeat via ZooKeeper.  The Safety Net monitors these heartbeats and notifies -->
+  <!-- the Master service that a Cachelet has timed out based on the nimbus.safety.net.timeout property. -->
+  <!-- The Master will attempt to restart the Cachelet, tell it to reingest whatever it was storing, and then notify -->
+  <!-- clients that it is available for use once again. -->
+  <!-- Without the Safety Net, if a Cachelet goes down, the clients may timeout. -->
+  <!-- Default value is true -->
+  <property>
+    <name>nimbus.safety.net.enabled</name>
+    <value>true</value>
+  </property>
+
+  <!-- The nimbus.safety.net.timeout property is used by the Safety Net to notify any listeners that a -->
+  <!-- Cachelet has not responded in the configured amount of time in milliseconds.-->
+  <!-- Note that nimbus.safety.net.enabled must be set to true for this value to mean anything. -->
+  <!-- Default value is 15000 milliseconds -->
+  <property>
+    <name>nimbus.safety.net.timeout</name>
+    <value>60000</value>
+  </property>
+
+  <!-- The nimbus.safety.net.heartbeat property is used by Cachelets to send heartbeats to ZooKeeper. -->
+  <!-- Note that nimbus.safety.net.enabled must be set to true for this value to mean anything. -->
+  <!-- Value is in milliseconds. -->
+  <!-- Default value is 5000 millisecond -->
+  <property>
+    <name>nimbus.cachelet.heartbeat</name>
+    <value>2000</value>
+  </property>
+
+  <!-- The nimbus.server.hash property is used to choose the hashing algorithm for each Cache. -->
+  <!-- Currently, HASHCODE and CRC16 are the only hash algorithms.  HASHCODE is faster and more even, -->
+  <!-- However, the distribution is less random than CRC16.  With 2x replication and 3 Cachelets, -->
+  <!-- each key that hashes to 0 will be distributed to 0 and 1. A key that hashes to 1 will be -->
+  <!-- distributed to 1 and 2, and a key that hashes 2 will be distributed to 2 and 0. -->
+  <!-- Default value is HASHCODE -->
+  <property>
+    <name>nimbus.server.hash</name>
+    <value>HASHCODE</value>
+  </property>
+
+  <property>
+    <name>write.ahead.log.dir</name>
+    <value>/nimbus/writeaheadlogs</value>
+  </property>
+
+  <property>
+    <name>zk.session.timeout</name>
+    <value>30000</value>
+  </property>
+
+  <property>
+    <name>zk.assistant.root.path</name>
+    <value>/nimbus/</value>
+  </property>
+</configuration>

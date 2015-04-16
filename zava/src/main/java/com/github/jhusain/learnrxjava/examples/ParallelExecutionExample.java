@@ -22,7 +22,25 @@ public class ParallelExecutionExample {
         List<TileResponse> allTiles = populatedTiles.toList()
                 .toBlocking().single();
     }
-    
+
+    /**
+     * Example Output
+     Search started  => 96ms
+     Search completed  => 1127ms
+
+     getSellerReviews[1] completed  => 2124ms
+     getSellerReviews[2] completed  => 2124ms
+
+     zip[1] completed  => 2124ms
+     zip[2] completed  => 2125ms
+
+     getSellerReviews[3] completed  => 2125ms
+     getProductImage[2] completed  => 2125ms
+     getProductImage[1] completed  => 2126ms
+     zip[3] completed  => 2131ms
+     All Tiles Completed  => 2131ms
+     getProductImage[3] completed  => 2132ms
+     */
     public static void main(String[] args) {
         final long startTime = System.currentTimeMillis();
 

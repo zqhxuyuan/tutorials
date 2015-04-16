@@ -1,0 +1,44 @@
+This code implements the shortest path algorithm described in 
+"Data-Intensive Text Processing with MapReduce" by Jimmy Lin and
+Chris Dyer.
+
+The algorithm computes the shortest path from a starting node to all
+other reachable nodes in the graph.
+
+The input of the graph is given in a file of the following format:
+
+<node id>TAB<distance>,<comma separated adjacency list>
+
+The starting node must be given distance 0.  All other nodes must be
+given distance -1.
+
+For example, a 5 graph node is:
+
+A	0,B,C
+B	-1,D,C
+C	-1,B,E,D
+D	-1,E
+E	-1,A,D
+
+Sample graph input data are found in the data directory.  The graph data
+must be put into HDFS.
+
+The driver submits multiple map-reduce jobs, one per iteration through
+the graph.  The driver stops when an iteration produces no new results.
+That is, it does an extra iteration to determine when to stop.  This
+termination condition works with weighted edges.
+
+The algorithm does not currently handle weighted edges, but could be
+modified to do so.
+
+The output of each iteration produces an output directory, named by
+the input file +"."+<iteration>.  Thus if the input file is "graphdata", the
+output of the third iteration is "graphdata.3".
+
+Assuming the driver, mapper and reducer are compiled into a jar file named 
+"shortestpath.jar" and the input file is "graphdata", then the algorithm can
+be run as follows:
+
+	hadoop jar shortestpath.jar graphdata
+
+(Note there is no specification of the output directory since the driver computes it from the input data.) 

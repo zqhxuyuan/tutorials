@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <!-- The nimbus.home property is the home directory where Java is installed. -->
+  <!-- Because this is system dependent, there is no default. -->
+  <!-- property>
+    <name>java.home</name>
+    <value></value>
+  </property-->
+
+  <!-- The nimbus.home property is the home directory where Nimbus is installed. -->
+  <!-- No default value -->
+  <!-- property>
+    <name>nimbus.home</name>
+    <value></value>
+  </property-->
+</configuration>
