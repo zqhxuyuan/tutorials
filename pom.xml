@@ -17,6 +17,8 @@
 
         <module>bigdata</module>
         <module>scala</module>
+
+        <module>soa</module>
     </modules>
 
     <properties>

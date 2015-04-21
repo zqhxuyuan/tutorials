@@ -1,0 +1,11 @@
+
+https://github.com/yuanxiaolong
+
+测试方法：
+1. 先启动Provider
+2. 后启动Consumer
+3. 观察Consumer控制台的输出结果， 每隔一段时间会打印出Hello world的调用
+
+如果将1,2步骤反过来， 则3无法看到结果
+也就是说服务提供者要先于服务消费者启动!
+
