@@ -7,8 +7,8 @@ middleware: java中间件
 
 algs : 算法
 
-TODO
-
 scala
 
-bigdata
+bigdata : hadoop echo-system
+
+soa : dubbo,

@@ -21,9 +21,6 @@
         <es-hadoop.version>2.0.2</es-hadoop.version>
         <paoding.version>2.0.4</paoding.version>
 
-        <zookeeper.version>3.4.5</zookeeper.version>
-        <curator.version>2.7.1</curator.version>
-
         <riak.version>2.0.0</riak.version>
         <titan.version>0.5.3</titan.version>
         <neo4j.version>2.1.6</neo4j.version>
@@ -169,45 +166,6 @@
             <artifactId>spring-data-hadoop</artifactId>
             <version>2.1.0.RELEASE-hadoop25</version>
         </dependency>
-
-        <!--ZooKeeper-->
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>${curator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>${curator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-x-discovery</artifactId>
-            <version>${curator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-test</artifactId>
-            <version>${curator.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.netflix.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.curator</groupId>
-            <artifactId>curator-client</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
 
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
