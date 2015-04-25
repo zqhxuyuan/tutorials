@@ -17,9 +17,11 @@
  */
 package storm.kafka;
 
+import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StringKeyValueScheme extends StringScheme implements KeyValueScheme {
@@ -34,4 +36,23 @@ public class StringKeyValueScheme extends StringScheme implements KeyValueScheme
         return new Values(ImmutableMap.of(keyString, valueString));
     }
 
+//    @Override
+//    public List<Object> deserializeKeyAndValue(byte[] key, byte[] value){
+//        ArrayList tuple = new ArrayList();
+//        tuple.add(key);
+//        tuple.add(value);
+//        return tuple;
+//    }
+//
+//    @Override
+//    public List<Object> deserialize(byte[] bytes) {
+//        ArrayList tuple = new ArrayList();
+//        tuple.add(bytes);
+//        return tuple;
+//    }
+//
+//    @Override
+//    public Fields getOutputFields() {
+//        return new Fields("key","value");
+//    }
 }

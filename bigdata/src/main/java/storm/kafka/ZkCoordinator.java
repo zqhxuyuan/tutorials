@@ -27,6 +27,14 @@ import static storm.kafka.KafkaUtils.taskId;
 
 /**
  * 一个客户端/消费者, 发起一个Spout任务task要消费多个kafka中的分区日志
+ *
+ * 看看_coordinator 是干嘛的？
+ * 这很关键，因为我们一般都会开多个并发的kafkaspout，类似于high-level中的consumer group，如何保证这些并发的线程不冲突？
+ * 使用和highlevel一样的思路，一个partition只会有一个spout消费，这样就避免处理麻烦的访问互斥问题(kafka做访问互斥很麻烦，试着想想)
+ * 是根据当前spout的task数和partition数来分配，task和partitioin的对应关系的，并且为每个partition建立PartitionManager
+ *
+ * 并发的Spout指的是Spout的任务数, 即一个Spout可以有多个Task.
+ * kafka中的一个Partition只会被Spout的一个Task处理.
  */
 public class ZkCoordinator implements PartitionCoordinator {
     public static final Logger LOG = LoggerFactory.getLogger(ZkCoordinator.class);

@@ -15,6 +15,14 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by hadoop on 14-11-26.
+ *
+ * High-level Consumer
+ *
+ * 首先要先创建topic: bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic test2
+ * 先启动消费者, 然后启动生产者, 观察在消费者的控制台能够看到生产者发送的消息
+ *
+ * bin/kafka-topics.sh --zookeeper localhost:2181 --delete --topic test2
+ * bin/kafka-topics.sh --list --zookeeper localhost:2181
  */
 public class HelloConsumer {
     public static void main(String[] args) throws Exception {
@@ -28,7 +36,7 @@ public class HelloConsumer {
         // 指定zookeeper同步最长延迟多久再产生异常
         props.put("zookeeper.sync.time.ms", "2000");
         // 指定多久消费者更新offset到zookeeper中。注意offset更新时基于time而不是每次获得的消息。
-        // 一旦在更新zookeeper发生异常并重启，将可能拿到已拿到过的消息
+        // 一旦在更新zookeeper发生异常并重启，将可能拿到已拿到过时的消息
         props.put("auto.commit.interval.ms", "1000");
         ConsumerConnector consumer = Consumer.createJavaConsumerConnector(new ConsumerConfig(props));
 

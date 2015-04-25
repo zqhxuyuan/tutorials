@@ -18,14 +18,21 @@ public class MyTopology {
 
 	public static void main(String[] args)
             throws AlreadyAliveException, InvalidTopologyException, InterruptedException, FileNotFoundException {
+        String topic = "kafkaToptic";
+        String zkRoot = "/kafkastorm";
+        String spoutId = "word";  //读取的status会被存在，/kafkastorm/id下面，所以id类似consumer group
 
         //Kafka配置在zookeeper上的节点
         BrokerHosts brokerHosts = new ZkHosts("localhost");
-		SpoutConfig spoutConf = new SpoutConfig(brokerHosts, "kafkaToptic", "/data", "word");
+		SpoutConfig spoutConf = new SpoutConfig(brokerHosts, topic, zkRoot, spoutId);
 
 		spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
 		//spoutConf.forceStartOffsetTime(-2);
+        spoutConf.forceFromStart = false;
+        spoutConf.startOffsetTime = kafka.api.OffsetRequest.EarliestTime();
+        spoutConf.metricsTimeBucketSizeInSecs = 6;
 
+        //只有在local模式下需要记录读取状态时，才需要设置
 		spoutConf.zkServers = new ArrayList<String>() {
 			{
 				add("localhost");

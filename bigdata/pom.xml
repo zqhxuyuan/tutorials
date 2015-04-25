@@ -37,7 +37,6 @@
         <hive.version>0.13.1-cdh5.2.0</hive.version>
         <crunch.version>0.11.0-hadoop2</crunch.version> <!-- 0.11.0-cdh5.2.0, 0.11.0-hadoop2 -->
         <mahout.version>0.6</mahout.version> <!--0.9-cdh5.2.0-->
-        <avro.version>1.7.7</avro.version>
         <cassandra.version>2.1.2</cassandra.version>
         <flume.version>1.4.0</flume.version>
         <tachyon.version>0.5.0</tachyon.version>
@@ -109,18 +108,6 @@
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
             <version>${hive.version}</version>
-        </dependency>
-
-        <!-- avro -->
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>${avro.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro-ipc</artifactId>
-            <version>${avro.version}</version>
         </dependency>
 
         <!-- flume -->
@@ -280,6 +267,28 @@
             <version>2.3.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.10</artifactId>
+            <version>${kafka.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.metamorphosis</groupId>
+            <artifactId>metamorphosis-client</artifactId>
+            <version>1.4.6.2</version>
+        </dependency>
+
 
         <!-- spark -->
         <dependency>
@@ -291,6 +300,12 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming_${scala.bin.version}</artifactId>
             <version>${spark.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.10</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -448,6 +463,12 @@
             <groupId>org.apache.samza</groupId>
             <artifactId>samza-kafka_2.10</artifactId>
             <version>${samza.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.10</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- tez -->

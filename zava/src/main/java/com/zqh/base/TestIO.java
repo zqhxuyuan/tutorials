@@ -42,7 +42,9 @@ public class TestIO {
 
         //testCopyWriteFile();
 
-        testByteSlice5();
+        //testByteSlice5();
+
+        testCopyWriteFile();
     }
 
     public static void testCopyWriteFile()throws Exception{
@@ -58,6 +60,10 @@ public class TestIO {
 
         srcFolder = "/home/hadoop/github.com/sparrow-actor/sparrow-actor-core/src/main/java/com/shansun/sparrow/actor";
         targetFolder = "/home/hadoop/IdeaProjects/go-bigdata/zava/src/main/java/com/shansun/sparrow/actor";
+        //testReadAndWrite(srcFolder, targetFolder);
+
+        srcFolder = "/home/hadoop/github.example/DataOptTopology/src/storm";
+        targetFolder = "/home/hadoop/IdeaProjects/go-bigdata/tutorials/bigdata/src/main/java/storm";
         testReadAndWrite(srcFolder, targetFolder);
     }
 

@@ -48,6 +48,8 @@ The second thing needed for constructing a kafkaSpout is an instance of KafkaCon
 
 The BrokerHosts can be any implementation of BrokerHosts interface as described above. the Topic is name of kafka topic.
 The optional ClientId is used as a part of the zookeeper path where the spout's current consumption offset is stored.
+clientId用来表示Spout中当前的消费位置offset, 会作为zookeeper的一个路径.
+Kafka中的partition会被消费者消费, 也会记录在zk中. 这里Storm的Spout的消费位置和Kafka的offset不是一个概念.
 
 There are 2 extensions of KafkaConfig currently in use.
 
@@ -102,7 +104,8 @@ also controls the naming of your output field.
 
 The default RawMultiScheme just takes the byte[] and returns a tuple with byte[] as is. The name of the outputField is
 "bytes". There are alternative implementation like SchemeAsMultiScheme and KeyValueSchemeAsMultiScheme which can convert
-the byte[] to String. 
+the byte[] to String.
+
 ### Examples
 ####Core Spout
 ```java

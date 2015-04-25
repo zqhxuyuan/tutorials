@@ -5,13 +5,14 @@ import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 
 import java.util.Properties;
+import java.util.Random;
 
 /**
  * Created by hadoop on 14-11-26.
  */
 public class HelloProducer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         Properties props = new Properties();
         //指定kafka节点：注意这里无需指定集群中所有Boker，只要指定其中部分即可，它会自动取meta信息并连接到对应的Boker节点
         props.put("metadata.broker.list", "localhost:9092");
@@ -27,7 +28,20 @@ public class HelloProducer {
         Producer<String, String> producer = new Producer<String, String>(config);
 
         //创建KeyedMessage发送消息，参数1为topic名，参数2为分区名（若为null则随机发到一个分区），参数3为消息
-        producer.send(new KeyedMessage<String, String>("test2", "partitionKey1", "msg1"));
+        //producer.send(new KeyedMessage<String, String>("test2", "partitionKey1", "msg1"));
+        //producer.close();
+
+        Random random = new Random(1000);
+        int count = 0;
+        while (true){
+            //注意如果partitionKey为null的话, 要注释掉props中的partitioner.class.
+            producer.send(new KeyedMessage<String, String>("test2", "partitionKey1", "msg-" + random.nextInt()));
+            Thread.sleep(100);
+            count ++;
+            if(count == 100000){
+                break;
+            }
+        }
         producer.close();
     }
 }

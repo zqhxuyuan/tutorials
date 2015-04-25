@@ -170,11 +170,14 @@ public class KafkaUtils {
         ByteBufferMessageSet msgs = null;
         String topic = config.topic;
         int partitionId = partition.partition;
+
         FetchRequestBuilder builder = new FetchRequestBuilder();
+        //Builder链式调用. fetchSizeBytes表示一次要获取多少数据量. 所以从offset开始,一次获取不止一条消息
         FetchRequest fetchRequest = builder.addFetch(topic, partitionId, offset, config.fetchSizeBytes).
                 clientId(config.clientId).maxWait(config.fetchMaxWait).build();
         FetchResponse fetchResponse;
         try {
+            //消费者传入获取请求,得到获取响应
             fetchResponse = consumer.fetch(fetchRequest);
         } catch (Exception e) {
             if (e instanceof ConnectException ||
@@ -188,6 +191,7 @@ public class KafkaUtils {
                 throw new RuntimeException(e);
             }
         }
+        // 主要处理offset outofrange的case，通过getOffset从earliest或latest读
         if (fetchResponse.hasError()) {
             KafkaError error = KafkaError.getError(fetchResponse.errorCode(topic, partitionId));
             if (error.equals(KafkaError.OFFSET_OUT_OF_RANGE) && config.useStartOffsetTimeIfOffsetOutOfRange) {
@@ -208,6 +212,7 @@ public class KafkaUtils {
 
     public static Iterable<List<Object>> generateTuples(KafkaConfig kafkaConfig, Message msg) {
         Iterable<List<Object>> tups;
+        //消息的负载是字节缓冲区, 转为序列化后的字节数组
         ByteBuffer payload = msg.payload();
         if (payload == null) {
             return null;

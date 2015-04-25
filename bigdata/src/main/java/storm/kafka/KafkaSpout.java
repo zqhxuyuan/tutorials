@@ -104,6 +104,7 @@ public class KafkaSpout extends BaseRichSpout {
             _coordinator = new ZkCoordinator(_connections, conf, _spoutConfig, _state, context.getThisTaskIndex(), totalTasks, _uuid);
         }
 
+        //反映出每个partition的消费情况
         context.registerMetric("kafkaOffset", new IMetric() {
             KafkaUtils.KafkaOffsetMetric _kafkaOffsetMetric = new KafkaUtils.KafkaOffsetMetric(_spoutConfig.topic, _connections);
 
@@ -114,7 +115,9 @@ public class KafkaSpout extends BaseRichSpout {
                 for (PartitionManager pm : pms) {
                     latestPartitions.add(pm.getPartition());
                 }
+                //根据最新的partition信息删除metric中已经不存在的partition的统计信息
                 _kafkaOffsetMetric.refreshPartitions(latestPartitions);
+                //更新metric中每个partition的已经完成的offset
                 for (PartitionManager pm : pms) {
                     _kafkaOffsetMetric.setLatestEmittedOffset(pm.getPartition(), pm.lastCompletedOffset());
                 }
@@ -122,6 +125,7 @@ public class KafkaSpout extends BaseRichSpout {
             }
         }, _spoutConfig.metricsTimeBucketSizeInSecs);
 
+        //反映出从Kafka fetch数据的情况
         context.registerMetric("kafkaPartition", new IMetric() {
             @Override
             public Object getValueAndReset() {
@@ -142,16 +146,23 @@ public class KafkaSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
+        //获取当前Task的所有Partition. ZkCoordinator中的taskIndex就是指Spout的当前Task.
+        //虽然一个Partition只能被一个Spout的Task处理. 但是一个Spout的Task可以处理多个Partition.
         List<PartitionManager> managers = _coordinator.getMyManagedPartitions();
-        for (int i = 0; i < managers.size(); i++) {
 
+        //其实只要从一个partition读成功一次
+        //之所以要for，是当EmitState.NO_EMITTED时，需要遍历后面的partition以保证读成功一次
+        for (int i = 0; i < managers.size(); i++) {
             try {
-                // in case the number of managers decreased
+                // in case the number of managers decreased. _currPartitionIndex初始为0，每次依次读一个
                 _currPartitionIndex = _currPartitionIndex % managers.size();
+                //发射Tuple
                 EmitState state = managers.get(_currPartitionIndex).next(_collector);
+                //当EMITTED_MORE_LEFT时，还有数据，可以继续读，不需要+1
                 if (state != EmitState.EMITTED_MORE_LEFT) {
                     _currPartitionIndex = (_currPartitionIndex + 1) % managers.size();
                 }
+                //当EmitState.NO_EMITTED时，表明partition的数据已经读完，也就是没有读到数据，所以不能break
                 if (state != EmitState.NO_EMITTED) {
                     break;
                 }
@@ -161,6 +172,7 @@ public class KafkaSpout extends BaseRichSpout {
             }
         }
 
+        //成功处理完完当前Tuple(已经ack了), 定期提交
         long now = System.currentTimeMillis();
         if ((now - _lastUpdateMs) > _spoutConfig.stateUpdateIntervalMs) {
             commit();
