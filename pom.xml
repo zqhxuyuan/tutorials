@@ -34,6 +34,8 @@
         <scala.version>2.10.4</scala.version>
         <scala.bin.version>2.10</scala.bin.version>
         <kafka.version>0.8.1</kafka.version>
+
+        <hadoop.version>2.5.0</hadoop.version> <!--2.4.1, 2.5.0, 2.5.0-cdh5.2.0, 2.5.0-mr1-cdh5.2.0-->
     </properties>
 
     <dependencies>

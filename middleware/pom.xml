@@ -189,6 +189,7 @@
             <artifactId>spring-data-neo4j</artifactId>
             <version>3.2.2.RELEASE</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
@@ -199,6 +200,7 @@
             <artifactId>spring-data-hadoop</artifactId>
             <version>2.1.0.RELEASE-hadoop25</version>
         </dependency>
+        -->
 
         <!--ThirdLib-->
         <dependency>
@@ -283,6 +285,13 @@
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <version>0.7.1.RELEASE</version>
+        </dependency>
+
+        <!--kafka-hadoop-consumer-->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
         </dependency>
     </dependencies>
 </project>
