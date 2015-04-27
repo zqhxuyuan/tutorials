@@ -1,0 +1,36 @@
+
+http://thrift.apache.org/docs/install/debian
+http://thrift.apache.org/docs/BuildingFromSource
+
+sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev \
+libboost-system-dev libboost-filesystem-dev libevent-dev automake libtool flex bison pkg-config g++ libssl-dev
+
+cd /home/hadoop/soft/thrift-0.9.1
+./configure --without-erlang
+make && sudo make install
+
+
+$ whereis javac
+javac: /home/hadoop/soft/jdk1.8.0_25/bin/javac
+$ ./configure JAVAC=/home/hadoop/soft/jdk1.8.0_25/bin/javac --without-erlang
+
+
+FUCK, after execute make too many times always wrong, I choose install by apt-get
+
+
+$ sudo apt-get install thrift-compiler
+$ thrift --version
+Thrift version 0.9.1
+
+------------------------------------
+
+cd ~/IdeaProjects/go-bigdata/tutorials/middleware/src/main/thrift
+thrift --gen java Calculator.thrift
+
+会在当前目录生成gen-java/com/zqh/midd/thrift/server文件夹, 以及CalculatorService.java
+在Idea中将gen-java右键Mark Directory as : Generated Sources Root
+
+切换到java/com/zqh/midd/thrift编写Handler, Server, Client三个类
+
+分别启动Server,Client, 查看Client控制台输出
+
