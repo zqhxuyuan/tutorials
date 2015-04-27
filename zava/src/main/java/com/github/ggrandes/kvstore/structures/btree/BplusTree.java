@@ -789,7 +789,7 @@ public abstract class BplusTree<K extends DataHolder<K>, V extends DataHolder<V>
 
 	/**
 	 * submit remove to redo
-	 * @param value
+	 * @param key
 	 */
 	abstract protected void submitRedoRemove(final K key);
 
