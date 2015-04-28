@@ -57,6 +57,7 @@
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -77,6 +78,12 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-yarn-client</artifactId>
             <version>${hadoop.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hadoop</groupId>
+            <artifactId>hadoop-lzo</artifactId>
+            <version>0.4.19</version>
         </dependency>
 
         <!-- hbase -->
