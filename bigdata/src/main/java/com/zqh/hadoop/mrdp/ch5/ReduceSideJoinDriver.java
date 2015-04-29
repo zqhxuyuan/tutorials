@@ -43,6 +43,8 @@ public class ReduceSideJoinDriver {
 
 			// Flag this record for the reducer and then output
 			outvalue.set("A" + value.toString());
+
+            //对记录进行打标签, 但是key不需要打! 否则不同文件key就不同了!
 			context.write(outkey, outvalue);
 		}
 	}
@@ -151,7 +153,7 @@ public class ReduceSideJoinDriver {
 					}
 				}
 			} else if (joinType.equalsIgnoreCase("rightouter")) {
-				// FOr each entry in B,
+				// For each entry in B,
 				for (Text B : listB) {
 					// If list A is not empty, join A and B
 					if (!listA.isEmpty()) {
@@ -207,6 +209,12 @@ public class ReduceSideJoinDriver {
 	}
 
 	public static void main(String[] args) throws Exception {
+        args = new String[]{
+                "file:///home/hadoop/data/stackoverflow/stackoverflow-200906/Users.xml",
+                "file:///home/hadoop/data/stackoverflow/stackoverflow-200906/Comments.xml",
+                "file:///home/hadoop/data/output/mrdp/reducejoin",
+                "inner"
+        };
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 4) {

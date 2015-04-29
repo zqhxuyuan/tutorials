@@ -80,11 +80,13 @@
             <version>${hadoop.version}</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>com.hadoop</groupId>
             <artifactId>hadoop-lzo</artifactId>
             <version>0.4.19</version>
         </dependency>
+        -->
 
         <!-- hbase -->
         <!--
@@ -104,6 +106,12 @@
             <artifactId>hbase-common</artifactId>
             <version>${hbase.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.apache.hive</groupId>
@@ -239,6 +247,12 @@
                 </exclusion>
             </exclusions>
             -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.storm</groupId>
