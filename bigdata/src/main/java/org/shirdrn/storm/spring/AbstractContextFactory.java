@@ -5,9 +5,16 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+/**
+ * 上下文工厂接口的抽象类
+ * @param <T>
+ * @param <R>
+ */
 public abstract class AbstractContextFactory<T, R> implements ContextFactory<T> {
 
+    //名称 -> 上下文对象
 	private final Map<String, T> cachedContexts = Maps.newHashMap();
+    //上下文对象 -> 类型
 	private final Map<T, Class<R>> realContextTypes = Maps.newHashMap();
 	
 	public synchronized void register(String name, T context) {
