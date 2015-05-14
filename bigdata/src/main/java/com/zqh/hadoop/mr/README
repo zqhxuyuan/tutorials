@@ -3,11 +3,16 @@
 http://blog.csdn.net/column/details/use-map-reduce.html
 
 
-|Title|Data|Class|Ref|
-|-----|-----|-----|----|
-|hadoop之MapReduce自定义二次排序流程实例详解|~/data/mralgs/secondsort.input|SecondSortMR|http://zengzhaozheng.blog.51cto.com/8219051/1379271|
-|MapReduce实现左连接|RawMapreduce|~/data/mralgs/users,transaction|http://blog.matthewrathbone.com/2013/02/09/real-world-hadoop-implementing-a-left-outer-join-in-hadoop-map-reduce.html|
-|Data-Intensive Text Processing with MapReduce|~/data/mralgs/bbejeck|aggregation,coocurrance,joins,secondary|https://github.com/bbejeck/hadoop-algorithms|
+| **[Technical Docs] [techdocs]**     | **[Setup Guide] [setup]**     | **[Roadmap] [roadmap]**           | **[Contributing] [contributing]**           |
+|-------------------------------------|-------------------------------|-----------------------------------|---------------------------------------------|
+| [![i1] [techdocs-image]] [techdocs] | [![i2] [setup-image]] [setup] | [![i3] [roadmap-image]] [roadmap] | [![i4] [contributing-image]] [contributing] |
+
+
+| Title                                         |Data                           |Class                                  |Ref                                                                                                                    |
+|--------------------------------------------- -|-------------------------------|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| MapReduce Secondary Sort                      |~/data/mralgs/secondsort.input |SecondSortMR                           |http://zengzhaozheng.blog.51cto.com/8219051/1379271                                                                    |
+| MapReduce Implements Left Outer Join          |RawMapreduce                   |~/data/mralgs/users,transaction        |http://blog.matthewrathbone.com/2013/02/09/real-world-hadoop-implementing-a-left-outer-join-in-hadoop-map-reduce.html  |
+| Data-Intensive Text Processing with MapReduce |~/data/mralgs/bbejeck          |aggregation,coocurrance,joins,secondary|https://github.com/bbejeck/hadoop-algorithms                                                                           |
 
 
 
