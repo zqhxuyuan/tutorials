@@ -1,0 +1,46 @@
+深入浅出 Java Concurrency
+====
+
+http://www.blogjava.net/xylz/archive/2010/07/08/325587.html
+
+J.U.C 整体认识
+原子操作 part 1 从AtomicInteger开始
+原子操作 part 2 数组、引用的原子操作
+原子操作 part 3 指令重排序与happens-before法则
+原子操作 part 4 CAS操作
+锁机制 part 1 Lock与ReentrantLock
+锁机制 part 2 AQS
+锁机制 part 3 加锁的原理 (Lock.lock)
+锁机制 part 4 锁释放与条件变量 (Lock.unlock And Condition)
+锁机制 part 5 闭锁 (CountDownLatch)
+锁机制 part 6 CyclicBarrier
+锁机制 part 7 信号量 (Semaphore)
+锁机制 part 8 读写锁 (ReentrantReadWriteLock) (1)
+锁机制 part 9 读写锁 (ReentrantReadWriteLock) (2)
+锁机制 part 10 锁的一些其它问题
+并发容器 part 1 ConcurrentMap (1)
+并发容器 part 2 ConcurrentMap (2)
+并发容器 part 3 ConcurrentMap (3)
+并发容器 part 4 并发队列与Queue简介
+并发容器 part 5 ConcurrentLinkedQueue
+并发容器 part 6 可阻塞的BlockingQueue (1)
+并发容器 part 7 可阻塞的BlockingQueue (2)
+并发容器 part 8 可阻塞的BlockingQueue (3)
+并发容器 part 9 双向队列集合 Deque
+并发容器 part 10 双向并发阻塞队列 BlockingDeque
+并发容器 part 11 Exchanger
+并发容器 part 12 线程安全的List/Set CopyOnWriteArrayList/CopyOnWriteArraySet
+线程池 part 1 简介
+线程池 part 2 Executor 以及Executors
+线程池 part 3 Executor 生命周期
+线程池 part 4 线程池任务拒绝策略
+线程池 part 5 周期性任务调度
+线程池 part 6 线程池的实现及原理 (1)
+线程池 part 7 线程池的实现及原理 (2)
+线程池 part 8 线程池的实现及原理 (3)
+线程池 part 9 并发操作异常体系
+并发总结 part 1 死锁与活跃度
+并发总结 part 2 常见的并发场景
+并发总结 part 3 常见的并发陷阱
+并发总结 part 4  性能与伸缩性
+捕获Java线程池执行任务抛出的异常

@@ -24,27 +24,30 @@ import com.zqh.paas.util.StringUtil;
 
 /**
  * 统一配置ZK管理类，实现初始化自动创建
- *
+ * ZK作为配置中心, 管理一些中间件的地址,入口,资源/服务的配置参数
  */
 public class ConfigurationCenter {
 	private static final Logger log = Logger.getLogger(ConfigurationCenter.class);
 	private final String UNIX_FILE_SEPARATOR = "/";
 
-	private ZooKeeper zk = null;
+	private ZooKeeper zk = null; //zookeeper客户端实例,用于读写zookeeper节点
 
-	private String centerAddr = null;
-	private boolean createZKNode = false;
+	private String centerAddr = null; //zookeeper集群的地址
+	private boolean createZKNode = false; //是否在启动时由程序通过properties文件创建ZK节点
 	private int timeOut = 2000;
 
 	private String runMode = PROD_MODE;// P:product mode; D:dev mode
 	public static final String DEV_MODE = "D";
 	public static final String PROD_MODE = "P";
+    //ZK的配置信息用properties文件来表示,方便在没有存在节点的情况下由程序直接创建,也便于管理
 	private List<String> configurationFiles = new ArrayList<String>();
+    //对应properties文件的配置信息
 	private Properties props = new Properties();
 
     private String auth = null;
 
     // 订阅者. key:path, value:AppImpl
+    // 比如path=/com/zqh/paas/cache/conf, 其实现类为cacheSv:com.zqh.paas.cache.impl.RedisCache
 	private HashMap<String, ArrayList<ConfigurationWatcher>> subsMap = null;
 
 	public ConfigurationCenter(String centerAddr, int timeOut, String runMode, List<String> configurationFiles) {
@@ -95,6 +98,10 @@ public class ConfigurationCenter {
 			return zk;
 		} else {
 			ZooKeeper zk = new ZooKeeper(centerAddr, timeout, new Watcher() {
+                /**
+                 * 创建ZooKeeper客户端实例时, 指定通知机制
+                 * @param event
+                 */
 				public void process(WatchedEvent event) {
 					if (log.isInfoEnabled()) {
 						log.info(event.toString());
@@ -120,6 +127,7 @@ public class ConfigurationCenter {
 		}
 	}
 
+    //----------START:创建节点,并设置值.包括在父节点不存在的情况下,创建父节点.
 	@SuppressWarnings("rawtypes")
 	private void writeData() {
 		// 开始创建节点
@@ -163,6 +171,7 @@ public class ConfigurationCenter {
 			}
 		}
 	}
+    //----------END
 
 	@SuppressWarnings("rawtypes")
 	public void removeWatcher(String confPath, Class warcherClazz) throws PaasException {
@@ -203,6 +212,9 @@ public class ConfigurationCenter {
 
     /**
      * 订阅者的实现类在初始化后应该注册到ConfCenter
+     *
+     * 配置中心只提供读取节点数据的能力. 具体的服务类要自己在初始化的时候根据自己的节点路径,调用该方法获取节点数据,
+     * 然后从节点数据中构建自己的服务对象: 因为节点数据保存的就是这个服务类的配置信息,可以用于构建服务对象
      * @param confPath
      * @param warcher
      */
@@ -216,15 +228,22 @@ public class ConfigurationCenter {
         return this.getConf(confPath);
     }
 
+    /**
+     * 根据zookeeper的节点路径,获取这个节点的配置信息. 通常某个节点是针对某一类服务,所以节点的数据内容就是这个服务的配置信息
+     * @param confPath
+     * @return
+     * @throws PaasException
+     */
     public String getConf(String confPath) throws PaasException {
         String conf = null;
         try {
             if (DEV_MODE.equals(this.getRunMode())) {
                 return props.getProperty(confPath);
             } else {
+                //比较重要的是第二个参数表示有通知机制: 在获取节点数据时(初始化服务类),如果节点数据发生变化,通知客户端
+                //通知的实现类在构造ZooKeeper时指定:匿名的Watcher实例
                 conf = new String(zk.getData(confPath, true, null),"UTF-8");
             }
-
         } catch (Exception e) {
             log.error("", e);
             throw new PaasException("9999", "failed to get configuration from configuration center", e);

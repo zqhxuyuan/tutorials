@@ -3,6 +3,7 @@ package com.java7developer.chapter4.pets;
 import java.util.concurrent.BlockingQueue;
 
 public class Veterinarian extends Thread {
+
   protected final BlockingQueue<Appointment<Pet>> appts;
   protected String text = "";
   protected final int restTime;

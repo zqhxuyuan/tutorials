@@ -57,6 +57,11 @@ public class RedisCache implements ConfigurationWatcher, ICache {
 		}
 	}
 
+    /**
+     * 有两种情景会调用到该方法. 一个是服务类初始化时,通过paasContext的init-method自动调用
+     * 第二种是: 节点数据发生变化时(比如服务集群增删节点),要根据更新后的配置信息重新初始化对应的服务对象
+     * @param conf
+     */
 	@Override
 	public void process(String conf) {
 		if (log.isInfoEnabled()) {

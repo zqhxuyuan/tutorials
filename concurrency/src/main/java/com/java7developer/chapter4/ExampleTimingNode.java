@@ -14,18 +14,15 @@ public class ExampleTimingNode implements SimpleMicroBlogNode {
   }
 
   @Override
-  public synchronized void propagateUpdate(Update upd_,
-      SimpleMicroBlogNode backup_) {
+  public synchronized void propagateUpdate(Update upd_, SimpleMicroBlogNode backup_) {
     long currentTime = System.currentTimeMillis();
     arrivalTime.put(upd_, currentTime);
   }
 
   @Override
-  public synchronized void confirmUpdate(SimpleMicroBlogNode other_,
-      Update update_) {
+  public synchronized void confirmUpdate(SimpleMicroBlogNode other_, Update update_) {
     Long timeRecvd = arrivalTime.get(update_);
-    System.out.println("Recvd confirm: " + update_.getUpdateText() + " from "
-        + other_.getIdent());
+    System.out.println("Recvd confirm: " + update_.getUpdateText() + " from " + other_.getIdent());
   }
 
   @Override

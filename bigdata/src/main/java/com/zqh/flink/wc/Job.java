@@ -48,8 +48,7 @@ public class Job {
 		 * Start with getting some data from the environment, like
 		 * 	env.readTextFile(textPath);
 		 *
-		 * then, transform the resulting DataSet<String> using operations
-		 * like
+		 * then, transform the resulting DataSet<String> using operations like
 		 * 	.filter()
 		 * 	.flatMap()
 		 * 	.join()

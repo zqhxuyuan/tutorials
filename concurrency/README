@@ -1,4 +1,6 @@
-concurrency and java 8 and JVM
+concurrency ,java 8 , JVM and common utils
+
+#### Concurrency
 
 ## com.oracle
 
@@ -10,8 +12,19 @@ http://tutorials.jenkov.com/java-concurrency/index.html
 
 http://ifeve.com/java-concurrency-thread-directory/
 
+## com.vogella
+
+http://www.vogella.com/tutorials/JavaConcurrency/article.html
+
+#### Common Utils
+
 ## bbejeck.guava
 
 https://github.com/icejoywoo/guava-book
 
 https://github.com/tiantiangao/guava-study
+
+## knightliao/common-utils
+
+com.baidu.unbiz.common
+

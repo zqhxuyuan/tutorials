@@ -43,8 +43,7 @@ public class FlawedFixDeadlockWithLockMicroBlogNode implements
         }
       } catch (InterruptedException e) {
       } finally {
-        if (acquired)
-          lock.unlock();
+        if (acquired) lock.unlock();
       }
     }
   }

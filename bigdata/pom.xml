@@ -35,7 +35,7 @@
         <hbase.version>0.98.6-cdh5.2.0</hbase.version> <!--0.98.6-cdh5.2.0-->
         <hive.version>0.13.1-cdh5.2.0</hive.version>
         <crunch.version>0.11.0-hadoop2</crunch.version> <!-- 0.11.0-cdh5.2.0, 0.11.0-hadoop2 -->
-        <mahout.version>0.6</mahout.version> <!--0.9-cdh5.2.0-->
+        <mahout.version>0.9-cdh5.2.0</mahout.version> <!--0.6,0.9-cdh5.2.0-->
         <cassandra.version>2.1.2</cassandra.version>
         <flume.version>1.4.0</flume.version>
         <tachyon.version>0.5.0</tachyon.version>
@@ -157,6 +157,18 @@
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-core</artifactId>
             <version>${mahout.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-integration</artifactId>
+            <version>${mahout.version}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-core</artifactId>
+            <version>${mahout.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>lucene-core</artifactId>
@@ -176,7 +188,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-integration</artifactId>
@@ -209,23 +220,6 @@
             </exclusions>
         </dependency>
         -->
-
-        <!-- cassandra -->
-        <dependency>
-            <groupId>org.apache.cassandra</groupId>
-            <artifactId>cassandra-all</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-mapping</artifactId>
-            <version>2.1.2</version>
-        </dependency>
 
         <!-- Graph -->
         <dependency>

@@ -20,6 +20,7 @@ public class ProcessingThread extends Thread {
 
   public void initialize() {
     latch.countDown();
+    System.out.println("initialize...");
   }
 
   public void run() {
