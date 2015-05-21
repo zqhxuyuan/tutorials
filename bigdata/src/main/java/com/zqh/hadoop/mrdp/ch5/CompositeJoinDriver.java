@@ -26,13 +26,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class CompositeJoinDriver {
 
-	public static class CompositeMapper extends MapReduceBase implements
-			Mapper<Text, TupleWritable, Text, Text> {
+	public static class CompositeMapper extends MapReduceBase implements Mapper<Text, TupleWritable, Text, Text> {
 
 		@Override
-		public void map(Text key, TupleWritable value,
-				OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-
+		public void map(Text key, TupleWritable value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// Get the first two elements in the tuple and output them
 			output.collect((Text) value.get(0), (Text) value.get(1));
 		}
@@ -40,7 +37,6 @@ public class CompositeJoinDriver {
 
 	public static void main(String[] args) throws Exception {
 		JobConf conf = new JobConf("CompositeJoin");
-		conf.setJarByClass(CompositeJoinDriver.class);
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 4) {
 			System.err.println("Usage: CompositeJoin <user data> <comment data> <out> [inner|outer]");
@@ -56,6 +52,7 @@ public class CompositeJoinDriver {
 			System.exit(2);
 		}
 
+        conf.setJarByClass(CompositeJoinDriver.class);
 		conf.setMapperClass(CompositeMapper.class);
 		conf.setNumReduceTasks(0);
 
@@ -63,8 +60,7 @@ public class CompositeJoinDriver {
 		// The CompositeInputFormat will parse all of our input files and output records to our mapper.
 		conf.setInputFormat(CompositeInputFormat.class);
 
-		// The composite input format join expression will set how the records
-		// are going to be read in, and in what input format.
+		// The composite input format join expression will set how the records are going to be read in, and in what input format.
         /**
          * To meet the preconditions of a composite join, both the user and comment data sets
          have been preprocessed by MapReduce and output using the TextOutputFormat .
@@ -72,8 +68,7 @@ public class CompositeJoinDriver {
          Hadoop has a KeyValueTextOutputFormat that can parse these formatted data sets exactly as required.
          The key will be the output key of our format job (user ID) and the value will be the output value (user or comment data).
          */
-		conf.set("mapred.join.expr", CompositeInputFormat.compose
-                (joinType, KeyValueTextInputFormat.class, userPath, commentPath));
+		conf.set("mapred.join.expr", CompositeInputFormat.compose(joinType, KeyValueTextInputFormat.class, userPath, commentPath));
 
 		TextOutputFormat.setOutputPath(conf, outputDir);
 

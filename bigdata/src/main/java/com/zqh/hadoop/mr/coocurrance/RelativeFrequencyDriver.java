@@ -17,6 +17,11 @@ import java.io.IOException;
 public class RelativeFrequencyDriver {
 
     public static void main(String[] args) throws IOException,InterruptedException,ClassNotFoundException {
+        args = new String[]{
+                "/home/hadoop/data/mralgs/coocurrence",
+                "/home/hadoop/tmp/coocurrence"
+        };
+
         Job job = Job.getInstance(new Configuration());
         job.setJarByClass(RelativeFrequencyDriver.class);
         job.setJobName("Relative_Frequencies");
@@ -26,13 +31,14 @@ public class RelativeFrequencyDriver {
 
         job.setMapperClass(PairsRelativeOccurrenceMapper.class);
         job.setReducerClass(PairsRelativeOccurrenceReducer.class);
+
         job.setCombinerClass(PairsReducer.class);
         job.setPartitionerClass(WordPairPartitioner.class);
-        job.setNumReduceTasks(3);
+        job.setNumReduceTasks(2);
 
         job.setOutputKeyClass(WordPair.class);
         job.setOutputValueClass(IntWritable.class);
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
-
+        //System.exit(job.waitForCompletion(true) ? 0 : 1);
+        job.waitForCompletion(true);
     }
 }

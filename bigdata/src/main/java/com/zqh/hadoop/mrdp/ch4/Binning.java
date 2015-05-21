@@ -29,8 +29,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class Binning {
 
-	public static class BinningMapper extends
-			Mapper<Object, Text, Text, NullWritable> {
+	public static class BinningMapper extends Mapper<Object, Text, Text, NullWritable> {
 
 		private MultipleOutputs<Text, NullWritable> mos = null;
 
@@ -42,8 +41,7 @@ public class Binning {
 		}
 
 		@Override
-		protected void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
+		protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
 			// Parse the input string into a nice map
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
@@ -63,15 +61,12 @@ public class Binning {
 				if (groomed.equalsIgnoreCase("hadoop")) {
 					mos.write("bins", value, NullWritable.get(), "hadoop-tag");
 				}
-
 				if (groomed.equalsIgnoreCase("pig")) {
 					mos.write("bins", value, NullWritable.get(), "pig-tag");
 				}
-
 				if (groomed.equalsIgnoreCase("hive")) {
 					mos.write("bins", value, NullWritable.get(), "hive-tag");
 				}
-
 				if (groomed.equalsIgnoreCase("hbase")) {
 					mos.write("bins", value, NullWritable.get(), "hbase-tag");
 				}
@@ -88,8 +83,7 @@ public class Binning {
 		}
 
 		@Override
-		protected void cleanup(Context context) throws IOException,
-				InterruptedException {
+		protected void cleanup(Context context) throws IOException, InterruptedException {
 			// Close multiple outputs!
 			mos.close();
 		}
@@ -114,12 +108,10 @@ public class Binning {
 
 		// Configure the MultipleOutputs by adding an output called "bins"
 		// With the proper output format and mapper key/value pairs
-		MultipleOutputs.addNamedOutput(job, "bins", TextOutputFormat.class,
-				Text.class, NullWritable.class);
+		MultipleOutputs.addNamedOutput(job, "bins", TextOutputFormat.class, Text.class, NullWritable.class);
 
 		// Enable the counters for the job
-		// If there is a significant number of different named outputs, this
-		// should be disabled
+		// If there is a significant number of different named outputs, this should be disabled
 		MultipleOutputs.setCountersEnabled(job, true);
 
 		System.exit(job.waitForCompletion(true) ? 0 : 2);

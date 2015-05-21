@@ -112,7 +112,7 @@
             <version>${hbase.version}</version>
         </dependency>
 
-
+        <!--
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-jdbc</artifactId>
@@ -123,6 +123,7 @@
             <artifactId>hive-exec</artifactId>
             <version>${hive.version}</version>
         </dependency>
+        -->
 
         <!-- flume -->
         <dependency>
@@ -332,11 +333,13 @@
             <version>${spark.version}</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_${scala.bin.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-graphx_${scala.bin.version}</artifactId>

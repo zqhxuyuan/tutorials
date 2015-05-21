@@ -49,18 +49,11 @@ public class PostCommentBuildingDriver {
 		private Text outvalue = new Text();
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input string into a nice map
-			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value
-					.toString());
-
+			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 			String postId = parsed.get("Id");
-
-			if (postId == null) {
-				return;
-			}
+			if (postId == null) return;
 
 			// The foreign join key is the post ID
 			outkey.set(postId);
@@ -77,17 +70,11 @@ public class PostCommentBuildingDriver {
 		private Text outvalue = new Text();
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input string into a nice map
-			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value
-					.toString());
-
+			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 			String postId = parsed.get("PostId");
-			if (postId == null) {
-				return;
-			}
+            if (postId == null) return;
 
 			// The foreign join key is the user ID
 			outkey.set(postId);
@@ -98,9 +85,7 @@ public class PostCommentBuildingDriver {
 		}
 	}
 
-	public static class PostCommentHierarchyReducer extends
-			Reducer<Text, Text, Text, NullWritable> {
-
+	public static class PostCommentHierarchyReducer extends Reducer<Text, Text, Text, NullWritable> {
 		private ArrayList<String> comments = new ArrayList<String>();
 		private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private String post = null;
@@ -108,8 +93,7 @@ public class PostCommentBuildingDriver {
         // 一个帖子的所有回复记录都会到同一个reduce里.
         // 因为有2个mapper, 所以这个reduce会接收帖子信息和所有该帖子的回复信息
 		@Override
-		public void reduce(Text key, Iterable<Text> values, Context context)
-				throws IOException, InterruptedException {
+		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			// Reset variables
 			post = null;
 			comments.clear();
@@ -217,23 +201,19 @@ public class PostCommentBuildingDriver {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		String[] otherArgs = new GenericOptionsParser(conf, args)
-				.getRemainingArgs();
+		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 3) {
-			System.err
-					.println("Usage: PostCommentHierarchy <posts> <comments> <outdir>");
+			System.err.println("Usage: PostCommentHierarchy <posts> <comments> <outdir>");
 			System.exit(1);
 		}
 
 		Job job = new Job(conf, "PostCommentHierarchy");
 		job.setJarByClass(PostCommentBuildingDriver.class);
 
-		MultipleInputs.addInputPath(job, new Path(otherArgs[0]),
-				TextInputFormat.class, PostMapper.class);
+		MultipleInputs.addInputPath(job, new Path(otherArgs[0]), TextInputFormat.class, PostMapper.class);
+		MultipleInputs.addInputPath(job, new Path(otherArgs[1]), TextInputFormat.class, CommentMapper.class);
 
-		MultipleInputs.addInputPath(job, new Path(otherArgs[1]),
-				TextInputFormat.class, CommentMapper.class);
-
+        TextInputFormat.addInputPaths(job, "path1,path2");
 		job.setReducerClass(PostCommentHierarchyReducer.class);
 
 		job.setOutputFormatClass(TextOutputFormat.class);

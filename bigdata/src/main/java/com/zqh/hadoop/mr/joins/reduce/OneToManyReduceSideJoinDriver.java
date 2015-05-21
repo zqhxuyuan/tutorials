@@ -14,10 +14,18 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * Date: 6/11/13
  * Time: 9:27 PM
  */
-public class ManyToManyReduceSideJoinDriver {
+public class OneToManyReduceSideJoinDriver {
 
 
     public static void main(String[] args) throws Exception {
+        args = new String[]{
+                "/home/hadoop/data/mralgs/userInfo",
+                "/home/hadoop/data/mralgs/userEmp",
+                "/home/hadoop/data/mralgs/userJob",
+                "/home/hadoop/data/mralgs/userMobile",
+                "/home/hadoop/tmp/rsj-one-many"
+        };
+
         Splitter splitter = Splitter.on('/');
         StringBuilder filePaths = new StringBuilder();
 
@@ -33,7 +41,7 @@ public class ManyToManyReduceSideJoinDriver {
 
         filePaths.setLength(filePaths.length() - 1);
         Job job = Job.getInstance(config, "ReduceSideJoin");
-        job.setJarByClass(ManyToManyReduceSideJoinDriver.class);
+        job.setJarByClass(OneToManyReduceSideJoinDriver.class);
 
         FileInputFormat.addInputPaths(job, filePaths.toString());
         FileOutputFormat.setOutputPath(job, new Path(args[args.length-1]));
@@ -41,6 +49,7 @@ public class ManyToManyReduceSideJoinDriver {
         job.setMapperClass(JoiningMapper.class);
         job.setReducerClass(CachingJoiningReducer.class);
         job.setPartitionerClass(TaggedJoiningPartitioner.class);
+
         job.setOutputKeyClass(TaggedKey.class);
         job.setOutputValueClass(Text.class);
         System.exit(job.waitForCompletion(true) ? 0 : 1);

@@ -241,14 +241,12 @@ public class ReduceSideJoinDriver {
 		// Use multiple inputs to set which input uses what mapper
         // 使用多个输入, 针对不同的输入使用不同的Mapper
 		// This will keep parsing of each data set separate from a logical standpoint
-		// However, this version of Hadoop has not upgraded MultipleInputs
-		// to the mapreduce package, so we have to use the deprecated API.
-		// Future releases have this in the "mapreduce" package.
+		// However, this version of Hadoop has not upgraded MultipleInputs to the mapreduce package,
+		// so we have to use the deprecated API.Future releases have this in the "mapreduce" package.
 		MultipleInputs.addInputPath(job, new Path(otherArgs[0]), TextInputFormat.class, UserJoinMapper.class);
 		MultipleInputs.addInputPath(job, new Path(otherArgs[1]), TextInputFormat.class, CommentJoinMapper.class);
 
 		job.setReducerClass(UserJoinReducer.class);
-
 		FileOutputFormat.setOutputPath(job, new Path(otherArgs[2]));
 
 		job.setOutputKeyClass(Text.class);

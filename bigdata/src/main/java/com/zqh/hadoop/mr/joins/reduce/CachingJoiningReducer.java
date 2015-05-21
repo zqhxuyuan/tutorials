@@ -19,15 +19,21 @@ public class CachingJoiningReducer extends Reducer<TaggedKey, Text, Text, Text> 
     private Text currentJoinKey = new Text("NOT_SET");
     private ArrayListMultimap<Text, String> keyValues = ArrayListMultimap.create();
 
-
     @Override
     protected void reduce(TaggedKey key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         if (!key.getJoinKey().equals(currentJoinKey)) {
             if (!currentJoinKey.toString().equals("NOT_SET")) {
                 joinAllData();
+
+                //只需要一个joinKey. value是多个文件连接后的结果
                 context.write(currentJoinKey, joinedText);
+
+                //每个要关联的文件都要移除joinKey
                 keyValues.removeAll(currentJoinKey);
             }
+
+            //由于reducer没有使用分组保证相同joinKey的多个文件记录被同一个reduce()函数调用
+            //所以要在同一个reducer的多次reduce()调用之间保持当前处理的key的状态信息
             currentJoinKey.set(key.getJoinKey());
         }
         for (Text value : values) {

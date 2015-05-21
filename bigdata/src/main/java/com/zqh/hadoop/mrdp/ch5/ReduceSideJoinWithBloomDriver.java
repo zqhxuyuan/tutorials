@@ -31,16 +31,13 @@ import org.apache.hadoop.util.bloom.Key;
  */
 public class ReduceSideJoinWithBloomDriver {
 
-	public static class UserJoinMapperWithBloom extends
-			Mapper<Object, Text, Text, Text> {
+	public static class UserJoinMapperWithBloom extends Mapper<Object, Text, Text, Text> {
 
 		private Text outkey = new Text();
 		private Text outvalue = new Text();
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input string into a nice map
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 
@@ -57,8 +54,8 @@ public class ReduceSideJoinWithBloomDriver {
 			}
 		}
 
-		public static class CommentJoinMapperWithBloom extends
-				Mapper<Object, Text, Text, Text> {
+        // 用户表比较小, comment表比较大, 大表使用bloom filter进行过滤
+		public static class CommentJoinMapperWithBloom extends Mapper<Object, Text, Text, Text> {
 
 			private BloomFilter bfilter = new BloomFilter();
 			private Text outkey = new Text();
@@ -70,8 +67,7 @@ public class ReduceSideJoinWithBloomDriver {
 					Path[] files = DistributedCache.getLocalCacheFiles(context.getConfiguration());
 
 					if (files.length != 0) {
-						DataInputStream strm = new DataInputStream(
-                                new FileInputStream(new File(files[0].toString())));
+						DataInputStream strm = new DataInputStream(new FileInputStream(new File(files[0].toString())));
 						bfilter.readFields(strm);
 					} else {
 						throw new RuntimeException("Bloom filter not set in DistributedCache");
@@ -82,15 +78,16 @@ public class ReduceSideJoinWithBloomDriver {
 			}
 
 			@Override
-			public void map(Object key, Text value, Context context)
-					throws IOException, InterruptedException {
-
+			public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 				// Parse the input string into a nice map
 				Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 
 				String userId = parsed.get("UserId");
 				if (userId == null) return;
 
+                // 判断comment中的userId会不会被布隆过滤器过滤掉
+                // 如果没有被过滤掉, 说明userId对应的这条comment最终会被输出
+                // 所以布隆过滤器应该在事先训练userId.
 				if (bfilter.membershipTest(new Key(userId.getBytes()))) {
 					outkey.set(userId);
 					outvalue.set("B" + value.toString());
@@ -99,8 +96,7 @@ public class ReduceSideJoinWithBloomDriver {
 			}
 		}
 
-		public static class UserJoinReducer extends
-				Reducer<Text, Text, Text, Text> {
+		public static class UserJoinReducer extends Reducer<Text, Text, Text, Text> {
 
 			private ArrayList<Text> listA = new ArrayList<Text>();
 			private ArrayList<Text> listB = new ArrayList<Text>();
@@ -113,8 +109,7 @@ public class ReduceSideJoinWithBloomDriver {
 			}
 
 			@Override
-			public void reduce(Text key, Iterable<Text> values, Context context)
-					throws IOException, InterruptedException {
+			public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 				// Clear our lists
 				listA.clear();

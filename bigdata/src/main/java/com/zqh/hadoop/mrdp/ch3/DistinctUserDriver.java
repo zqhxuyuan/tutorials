@@ -22,15 +22,11 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class DistinctUserDriver {
 
-	public static class SODistinctUserMapper extends
-			Mapper<Object, Text, Text, NullWritable> {
-
+	public static class SODistinctUserMapper extends Mapper<Object, Text, Text, NullWritable> {
 		private Text outUserId = new Text();
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input into a nice map.
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 
@@ -50,13 +46,10 @@ public class DistinctUserDriver {
 		}
 	}
 
-	public static class SODistinctUserReducer extends
-			Reducer<Text, NullWritable, Text, NullWritable> {
+	public static class SODistinctUserReducer extends Reducer<Text, NullWritable, Text, NullWritable> {
 
 		@Override
-		public void reduce(Text key, Iterable<NullWritable> values,
-				Context context) throws IOException, InterruptedException {
-
+		public void reduce(Text key, Iterable<NullWritable> values, Context context) throws IOException, InterruptedException {
 			// Write the user's id with a null value
 			context.write(key, NullWritable.get());
 		}

@@ -3,11 +3,6 @@
 http://blog.csdn.net/column/details/use-map-reduce.html
 
 
-| **[Technical Docs] [techdocs]**     | **[Setup Guide] [setup]**     | **[Roadmap] [roadmap]**           | **[Contributing] [contributing]**           |
-|-------------------------------------|-------------------------------|-----------------------------------|---------------------------------------------|
-| [![i1] [techdocs-image]] [techdocs] | [![i2] [setup-image]] [setup] | [![i3] [roadmap-image]] [roadmap] | [![i4] [contributing-image]] [contributing] |
-
-
 | Title                                         |Data                           |Class                                  |Ref                                                                                                                    |
 |--------------------------------------------- -|-------------------------------|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | MapReduce Secondary Sort                      |~/data/mralgs/secondsort.input |SecondSortMR                           |http://zengzhaozheng.blog.51cto.com/8219051/1379271                                                                    |

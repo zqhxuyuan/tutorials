@@ -31,11 +31,9 @@ import org.xml.sax.InputSource;
 
 public class QuestionAnswerBuildingDriver {
 
-	public static class PostCommentMapper extends
-			Mapper<Object, Text, Text, Text> {
+	public static class PostCommentMapper extends Mapper<Object, Text, Text, Text> {
 
-		private DocumentBuilderFactory dbf = DocumentBuilderFactory
-				.newInstance();
+		private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private Text outkey = new Text();
 		private Text outvalue = new Text();
 
@@ -75,17 +73,14 @@ public class QuestionAnswerBuildingDriver {
 		}
 	}
 
-	public static class QuestionAnswerReducer extends
-			Reducer<Text, Text, Text, NullWritable> {
+	public static class QuestionAnswerReducer extends Reducer<Text, Text, Text, NullWritable> {
 
 		private ArrayList<String> answers = new ArrayList<String>();
-		private DocumentBuilderFactory dbf = DocumentBuilderFactory
-				.newInstance();
+		private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private String question = null;
 
 		@Override
-		public void reduce(Text key, Iterable<Text> values, Context context)
-				throws IOException, InterruptedException {
+		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			// Reset variables
 			question = null;
 			answers.clear();
@@ -94,13 +89,10 @@ public class QuestionAnswerBuildingDriver {
 			for (Text t : values) {
 				// If this is the post record, store it, minus the flag
 				if (t.charAt(0) == 'Q') {
-					question = t.toString().substring(1, t.toString().length())
-							.trim();
+					question = t.toString().substring(1, t.toString().length()).trim();
 				} else {
-					// Else, it is a comment record. Add it to the list, minus
-					// the flag
-					answers.add(t.toString()
-							.substring(1, t.toString().length()).trim());
+					// Else, it is a comment record. Add it to the list, minus the flag
+					answers.add(t.toString().substring(1, t.toString().length()).trim());
 				}
 			}
 
@@ -110,8 +102,7 @@ public class QuestionAnswerBuildingDriver {
 				String postWithCommentChildren = nestElements(question, answers);
 
 				// write out the XML
-				context.write(new Text(postWithCommentChildren),
-						NullWritable.get());
+				context.write(new Text(postWithCommentChildren), NullWritable.get());
 			}
 		}
 

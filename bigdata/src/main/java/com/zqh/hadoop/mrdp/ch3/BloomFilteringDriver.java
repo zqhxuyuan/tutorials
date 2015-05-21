@@ -30,8 +30,7 @@ import org.apache.hadoop.util.bloom.Key;
  */
 public class BloomFilteringDriver {
 
-	public static class BloomFilteringMapper extends
-			Mapper<Object, Text, Text, NullWritable> {
+	public static class BloomFilteringMapper extends Mapper<Object, Text, Text, NullWritable> {
 
 		private BloomFilter filter = new BloomFilter();
 
@@ -63,9 +62,7 @@ public class BloomFilteringDriver {
 		}
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input into a nice map.
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 
@@ -114,8 +111,8 @@ public class BloomFilteringDriver {
 		FileOutputFormat.setOutputPath(job, new Path(otherArgs[2]));
 
 		DistributedCache.addCacheFile(
-				FileSystem.get(conf).makeQualified(new Path(otherArgs[1]))
-						.toUri(), job.getConfiguration());
+				FileSystem.get(conf).makeQualified(new Path(otherArgs[1])).toUri(),
+                job.getConfiguration());
 
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 	}

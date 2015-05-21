@@ -24,16 +24,14 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class TopTenDriver {
 
-	public static class SOTopTenMapper extends
-			Mapper<Object, Text, NullWritable, Text> {
+	public static class SOTopTenMapper extends Mapper<Object, Text, NullWritable, Text> {
 
         // TreeMap是有序的.为什么要有序, 因为Top N的top含义指的是最高/最低的几个值.
 		// Our output key and value Writables
 		private TreeMap<Integer, Text> repToRecordMap = new TreeMap<Integer, Text>();
 
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			// Parse the input string into a nice map
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 			if (parsed == null) return;
@@ -66,7 +64,7 @@ public class TopTenDriver {
 	}
 
 	public static class SOTopTenReducer extends Reducer<NullWritable, Text, NullWritable, Text> {
-
+        // 和Mapper一样也是有序的. 因为最终的输出结果要保证有序
 		private TreeMap<Integer, Text> repToRecordMap = new TreeMap<Integer, Text>();
 
 		@Override
@@ -74,7 +72,7 @@ public class TopTenDriver {
 			for (Text value : values) {
 				Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
 
-                // 下面两断和Map端的一样. 都是先把值放进Map, 然后判断是否>10, 如果超过10个, 则删除第一个key
+                // 下面两段和Map端的一样. 都是先把值放进Map, 然后判断是否>10, 如果超过10个, 则删除第一个key
 				repToRecordMap.put(Integer.parseInt(parsed.get("Reputation")), new Text(value));
 
 				if (repToRecordMap.size() > 10) {

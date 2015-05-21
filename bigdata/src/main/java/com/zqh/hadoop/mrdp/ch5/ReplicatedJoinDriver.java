@@ -42,7 +42,9 @@ public class ReplicatedJoinDriver {
 
 	public static class ReplicatedJoinMapper extends Mapper<Object, Text, Text, Text> {
 
-        // 读取分布式缓存里文件到内存中. 存放的是<userId, Comment内容>
+        // 读取分布式缓存里文件到内存中. DC存放的是用户表(小表)的内容: <userId, UserInfo>
+        // 每个MapTask都能从分布式缓存中读取一致的用户数据-->相当于在内存中
+        // 分布式缓存读取出来就变成内存中的HashMap了, key是userId, 用来和大表进行关联的joinKey
 		private HashMap<String, String> userIdToInfo = new HashMap<String, String>();
 
 		private Text outvalue = new Text();
@@ -76,7 +78,6 @@ public class ReplicatedJoinDriver {
                 String line;
                 // For each record in the user file
                 while ((line = rdr.readLine()) != null) {
-
                     // Get the user ID for this record
                     Map<String, String> parsed = MRDPUtils.transformXmlToMap(line);
                     String userId = parsed.get("Id");
@@ -92,16 +93,15 @@ public class ReplicatedJoinDriver {
 		}
 
         /**
-         * The mapper is responsible for reading all files from the distributed cache during
-         the setup phase and storing them into in-memory lookup tables. After this setup
-         phase completes, the mapper processes each record and joins it with all the data
-         stored in-memory. If the foreign key is not found in the in-memory structures, the
-         record is either omitted or output, based on the join type.
+         * The mapper is responsible for reading all files from the distributed cache
+         during the setup phase and storing them into in-memory lookup tables.
+         After this setup phase completes, the mapper processes each record
+         and joins it with all the data stored in-memory.
+         If the foreign key is not found in the in-memory structures,
+         the record is either omitted or output, based on the join type.
          */
-
 		@Override
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
 			// Parse the input string into a nice map
 			Map<String, String> parsed = MRDPUtils.transformXmlToMap(value.toString());
@@ -114,13 +114,13 @@ public class ReplicatedJoinDriver {
 			String userInformation = userIdToInfo.get(userId);
 
 			// If the user information is not null, then output
+            // Mapper的setup()从DC中加载用户表小表,map()读取大表comments的每条记录,判断其userID是否在内存HashMap?
 			if (userInformation != null) {
 				outvalue.set(userInformation);
 				context.write(value, outvalue);
 			} else if (joinType.equalsIgnoreCase("leftouter")) {
-				// If we are doing a left outer join, output the record with an empty value
-                // LargeDataSide left join MemorySide
-                // 尽管输入数据的userId不在内存中. 但是因为是输入端进行left join, 所以结果必须包含输入端
+				// If we are doing a left outer join, output the record with an empty value LargeDataSide left join MemorySide
+                // 尽管输入数据的userId不在内存中. 但是因为是输入端进行left join, 所以结果必须包含输入端(comments大表)
 				context.write(value, new Text(""));
 			}
 		}
@@ -128,17 +128,14 @@ public class ReplicatedJoinDriver {
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
-		String[] otherArgs = new GenericOptionsParser(conf, args)
-				.getRemainingArgs();
+		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 4) {
-			System.err
-					.println("Usage: ReplicatedJoin <user data> <comment data> <out> [inner|leftouter]");
+			System.err.println("Usage: ReplicatedJoin <user data> <comment data> <out> [inner|leftouter]");
 			System.exit(1);
 		}
 
 		String joinType = otherArgs[3];
-		if (!(joinType.equalsIgnoreCase("inner") || joinType
-				.equalsIgnoreCase("leftouter"))) {
+		if (!(joinType.equalsIgnoreCase("inner") || joinType.equalsIgnoreCase("leftouter"))) {
 			System.err.println("Join type not set to inner or leftouter");
 			System.exit(2);
 		}
@@ -158,9 +155,7 @@ public class ReplicatedJoinDriver {
 		job.setOutputValueClass(Text.class);
 
 		// Configure the DistributedCache
-		DistributedCache.addCacheFile(new Path(otherArgs[0]).toUri(),
-				job.getConfiguration());
-
+		DistributedCache.addCacheFile(new Path(otherArgs[0]).toUri(), job.getConfiguration());
 		DistributedCache.setLocalFiles(job.getConfiguration(), otherArgs[0]);
 
 		System.exit(job.waitForCompletion(true) ? 0 : 3);

@@ -23,24 +23,24 @@ public class PairsRelativeOccurrenceMapper extends Mapper<LongWritable, Text, Wo
         String[] tokens = value.toString().split("\\s+");
         if (tokens.length > 1) {
             for (int i = 0; i < tokens.length; i++) {
-                    tokens[i] = tokens[i].replaceAll("\\W+","");
+                tokens[i] = tokens[i].replaceAll("\\W+","");
 
-                    if(tokens[i].equals("")){
-                        continue;
-                    }
+                if(tokens[i].equals("")){
+                    continue;
+                }
 
-                    wordPair.setWord(tokens[i]);
+                wordPair.setWord(tokens[i]);
 
-                    int start = (i - neighbors < 0) ? 0 : i - neighbors;
-                    int end = (i + neighbors >= tokens.length) ? tokens.length - 1 : i + neighbors;
-                    for (int j = start; j <= end; j++) {
-                        if (j == i) continue;
-                        wordPair.setNeighbor(tokens[j].replaceAll("\\W",""));
-                        context.write(wordPair, ONE);
-                    }
-                    wordPair.setNeighbor("*");
-                    totalCount.set(end - start);
-                    context.write(wordPair, totalCount);
+                int start = (i - neighbors < 0) ? 0 : i - neighbors;
+                int end = (i + neighbors >= tokens.length) ? tokens.length - 1 : i + neighbors;
+                for (int j = start; j <= end; j++) {
+                    if (j == i) continue;
+                    wordPair.setNeighbor(tokens[j].replaceAll("\\W",""));
+                    context.write(wordPair, ONE);
+                }
+                wordPair.setNeighbor("*");
+                totalCount.set(end - start);
+                context.write(wordPair, totalCount);
             }
         }
     }

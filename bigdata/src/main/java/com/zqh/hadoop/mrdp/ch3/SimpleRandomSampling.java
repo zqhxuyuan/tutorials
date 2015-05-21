@@ -17,9 +17,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class SimpleRandomSampling {
 
-	public static class SRSMapper extends
-			Mapper<Object, Text, NullWritable, Text> {
-
+	public static class SRSMapper extends Mapper<Object, Text, NullWritable, Text> {
 		private Random rands = new Random();
 		private Double percentage;
 

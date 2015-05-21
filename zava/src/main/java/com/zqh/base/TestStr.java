@@ -13,6 +13,10 @@ import java.util.Date;
 public class TestStr {
 
     public static void main(String[] args)throws Exception{
+        testRex();
+    }
+
+    public void testBuffer() throws Exception{
         String fileName = "/home/hadoop/data/splitByt.txt";
         File file = new File(fileName);
         BufferedReader reader = null;
@@ -41,5 +45,18 @@ public class TestStr {
         System.out.println(s0==s1);
         System.out.println(s0==s2);
         System.out.println(s3==s0);
+    }
+
+    public static void testRex(){
+        String str = "The quick brown jump over the quick dog";
+        String[] tokens = str.split("\\s+");
+
+        for (int i = 0; i < tokens.length; i++) {
+            tokens[i] = tokens[i].replaceAll("\\W+","");
+        }
+
+        for(String token : tokens){
+            System.out.println("Before:" + token + "|After:" + token.replaceAll("\\W", ""));;
+        }
     }
 }

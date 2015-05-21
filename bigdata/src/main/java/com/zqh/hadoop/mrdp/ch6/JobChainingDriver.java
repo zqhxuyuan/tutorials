@@ -193,11 +193,9 @@ public class JobChainingDriver {
 			outvalue.set((long) posts + "\t" + userIdToReputation.get(userId));
 
 			if ((double) posts < average) {
-				mos.write(MULTIPLE_OUTPUTS_BELOW_NAME, outkey, outvalue,
-						MULTIPLE_OUTPUTS_BELOW_NAME + "/part");
+				mos.write(MULTIPLE_OUTPUTS_BELOW_NAME, outkey, outvalue, MULTIPLE_OUTPUTS_BELOW_NAME + "/part");
 			} else {
-				mos.write(MULTIPLE_OUTPUTS_ABOVE_NAME, outkey, outvalue,
-						MULTIPLE_OUTPUTS_ABOVE_NAME + "/part");
+				mos.write(MULTIPLE_OUTPUTS_ABOVE_NAME, outkey, outvalue, MULTIPLE_OUTPUTS_ABOVE_NAME + "/part");
 			}
 
 		}
@@ -281,8 +279,7 @@ public class JobChainingDriver {
             // 缓存的使用在UserIdBinningMapper.setup阶段.
 			FileStatus[] userFiles = FileSystem.get(conf).listStatus(userInput);
 			for (FileStatus status : userFiles) {
-				DistributedCache.addCacheFile(status.getPath().toUri(),
-						binningJob.getConfiguration());
+				DistributedCache.addCacheFile(status.getPath().toUri(), binningJob.getConfiguration());
 			}
 
 			// Execute job and grab exit code

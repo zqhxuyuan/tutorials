@@ -22,9 +22,15 @@ import java.util.List;
 public class MapSideJoinDriver {
 
     public static void main(String[] args) throws Exception {
+        args = new String[]{
+                "/home/hadoop/data/mralgs/map3",
+                "/home/hadoop/data/mralgs/map4",
+                "/home/hadoop/tmp/map-side-join2"
+        };
+
         String separator = ",";
         String keyIndex = "0";
-        int numReducers = 10;
+        int numReducers = 1;
         String jobOneInputPath = args[0];
         String jobTwoInputPath = args[1];
         String joinJobOutPath = args[2];

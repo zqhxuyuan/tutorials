@@ -32,43 +32,33 @@ public class CartesianProduct {
 		public static final String RIGHT_INPUT_FORMAT = "cart.right.inputformat";
 		public static final String RIGHT_INPUT_PATH = "cart.right.path";
 
-		public static void setLeftInputInfo(JobConf conf,
-				Class<? extends FileInputFormat> inputFormat, String inputPath) {
+		public static void setLeftInputInfo(JobConf conf, Class<? extends FileInputFormat> inputFormat, String inputPath) {
 			conf.set(LEFT_INPUT_FORMAT, inputFormat.getCanonicalName());
 			conf.set(LEFT_INPUT_PATH, inputPath);
 		}
 
-		public static void setRightInputInfo(JobConf job,
-				Class<? extends FileInputFormat> inputFormat, String inputPath) {
+		public static void setRightInputInfo(JobConf job, Class<? extends FileInputFormat> inputFormat, String inputPath) {
 			job.set(RIGHT_INPUT_FORMAT, inputFormat.getCanonicalName());
 			job.set(RIGHT_INPUT_PATH, inputPath);
 		}
 
 		@Override
-		public InputSplit[] getSplits(JobConf conf, int numSplits)
-				throws IOException {
+		public InputSplit[] getSplits(JobConf conf, int numSplits) throws IOException {
 
 			try {
 				// Get the input splits from both the left and right data sets
-				InputSplit[] leftSplits = getInputSplits(conf,
-						conf.get(LEFT_INPUT_FORMAT), conf.get(LEFT_INPUT_PATH),
-						numSplits);
-				InputSplit[] rightSplits = getInputSplits(conf,
-						conf.get(RIGHT_INPUT_FORMAT),
-						conf.get(RIGHT_INPUT_PATH), numSplits);
+				InputSplit[] leftSplits = getInputSplits(conf, conf.get(LEFT_INPUT_FORMAT), conf.get(LEFT_INPUT_PATH), numSplits);
+				InputSplit[] rightSplits = getInputSplits(conf, conf.get(RIGHT_INPUT_FORMAT), conf.get(RIGHT_INPUT_PATH), numSplits);
 
-				// Create our CompositeInputSplits, size equal to left.length *
-				// right.length
-				CompositeInputSplit[] returnSplits = new CompositeInputSplit[leftSplits.length
-						* rightSplits.length];
+				// Create our CompositeInputSplits, size equal to left.length * right.length
+				CompositeInputSplit[] returnSplits = new CompositeInputSplit[leftSplits.length * rightSplits.length];
 
 				int i = 0;
 				// For each of the left input splits
 				for (InputSplit left : leftSplits) {
 					// For each of the right input splits
 					for (InputSplit right : rightSplits) {
-						// Create a new composite input split composing of the
-						// two
+						// Create a new composite input split composing of the two
 						returnSplits[i] = new CompositeInputSplit(2);
 						returnSplits[i].add(left);
 						returnSplits[i].add(right);
@@ -86,19 +76,14 @@ public class CartesianProduct {
 		}
 
 		@Override
-		public RecordReader getRecordReader(InputSplit split, JobConf conf,
-				Reporter reporter) throws IOException {
+		public RecordReader getRecordReader(InputSplit split, JobConf conf, Reporter reporter) throws IOException {
 			// create a new instance of the Cartesian record reader
-			return new CartesianRecordReader((CompositeInputSplit) split, conf,
-					reporter);
+			return new CartesianRecordReader((CompositeInputSplit) split, conf, reporter);
 		}
 
-		private InputSplit[] getInputSplits(JobConf conf,
-				String inputFormatClass, String inputPath, int numSplits)
-				throws ClassNotFoundException, IOException {
+		private InputSplit[] getInputSplits(JobConf conf, String inputFormatClass, String inputPath, int numSplits) throws ClassNotFoundException, IOException {
 			// Create a new instance of the input format
-			FileInputFormat inputFormat = (FileInputFormat) ReflectionUtils
-					.newInstance(Class.forName(inputFormatClass), conf);
+			FileInputFormat inputFormat = (FileInputFormat) ReflectionUtils.newInstance(Class.forName(inputFormatClass), conf);
 
 			// Set the input path for the left data set
 			inputFormat.setInputPaths(conf, inputPath);
@@ -108,8 +93,7 @@ public class CartesianProduct {
 		}
 	}
 
-	public static class CartesianRecordReader<K1, V1, K2, V2> implements
-			RecordReader<Text, Text> {
+	public static class CartesianRecordReader<K1, V1, K2, V2> implements RecordReader<Text, Text> {
 
 		// Record readers to get key value pairs
 		private RecordReader leftRR = null, rightRR = null;
@@ -135,31 +119,19 @@ public class CartesianProduct {
 		 * @param reporter
 		 * @throws IOException
 		 */
-		public CartesianRecordReader(CompositeInputSplit split, JobConf conf,
-				Reporter reporter) throws IOException {
+		public CartesianRecordReader(CompositeInputSplit split, JobConf conf, Reporter reporter) throws IOException {
 			this.rightConf = conf;
 			this.rightIS = split.get(1);
 			this.rightReporter = reporter;
 
 			try {
 				// Create left record reader
-				FileInputFormat leftFIF = (FileInputFormat) ReflectionUtils
-						.newInstance(Class.forName(conf
-								.get(CartesianInputFormat.LEFT_INPUT_FORMAT)),
-								conf);
-
+				FileInputFormat leftFIF = (FileInputFormat) ReflectionUtils.newInstance(Class.forName(conf.get(CartesianInputFormat.LEFT_INPUT_FORMAT)), conf);
 				leftRR = leftFIF.getRecordReader(split.get(0), conf, reporter);
-
 				// Create right record reader
-				rightFIF = (FileInputFormat) ReflectionUtils.newInstance(Class
-						.forName(conf
-								.get(CartesianInputFormat.RIGHT_INPUT_FORMAT)),
-						conf);
-
-				rightRR = rightFIF.getRecordReader(rightIS, rightConf,
-						rightReporter);
+				rightFIF = (FileInputFormat) ReflectionUtils.newInstance(Class.forName(conf.get(CartesianInputFormat.RIGHT_INPUT_FORMAT)), conf);
+				rightRR = rightFIF.getRecordReader(rightIS, rightConf, rightReporter);
 			} catch (ClassNotFoundException e) {
-
 				e.printStackTrace();
 				throw new IOException(e);
 			}
@@ -247,20 +219,14 @@ public class CartesianProduct {
 		private Text outkey = new Text();
 
 		@Override
-		public void map(Text key, Text value,
-				OutputCollector<Text, Text> output, Reporter reporter)
-				throws IOException {
-
+		public void map(Text key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
 			// If the two comments are not equal
 			if (!key.toString().equals(value.toString())) {
-				//
 				String[] leftTokens = key.toString().split("\\s");
 				String[] rightTokens = value.toString().split("\\s");
 
-				HashSet<String> leftSet = new HashSet<String>(
-						Arrays.asList(leftTokens));
-				HashSet<String> rightSet = new HashSet<String>(
-						Arrays.asList(rightTokens));
+				HashSet<String> leftSet = new HashSet<String>(Arrays.asList(leftTokens));
+				HashSet<String> rightSet = new HashSet<String>(Arrays.asList(rightTokens));
 
 				int sameWordCount = 0;
 				StringBuilder words = new StringBuilder();
@@ -279,13 +245,11 @@ public class CartesianProduct {
 		}
 	}
 
-	public static void main(String[] args) throws IOException,
-			InterruptedException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
 		long start = System.currentTimeMillis();
 		JobConf conf = new JobConf("Cartesian Product");
-		String[] otherArgs = new GenericOptionsParser(conf, args)
-				.getRemainingArgs();
+		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 		if (otherArgs.length != 2) {
 			System.err.println("Usage: CartesianProduct <comment data> <out>");
 			System.exit(1);
@@ -293,16 +257,12 @@ public class CartesianProduct {
 
 		// Configure the join type
 		conf.setJarByClass(CartesianProduct.class);
-
 		conf.setMapperClass(CartesianMapper.class);
-
 		conf.setNumReduceTasks(0);
 
 		conf.setInputFormat(CartesianInputFormat.class);
-		CartesianInputFormat.setLeftInputInfo(conf, TextInputFormat.class,
-				otherArgs[0]);
-		CartesianInputFormat.setRightInputInfo(conf, TextInputFormat.class,
-				otherArgs[0]);
+		CartesianInputFormat.setLeftInputInfo(conf, TextInputFormat.class, otherArgs[0]);
+		CartesianInputFormat.setRightInputInfo(conf, TextInputFormat.class, otherArgs[0]);
 
 		TextOutputFormat.setOutputPath(conf, new Path(otherArgs[1]));
 

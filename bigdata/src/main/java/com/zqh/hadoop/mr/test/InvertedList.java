@@ -28,29 +28,22 @@ import java.util.TreeMap;
  */
 public class InvertedList{
 
-
-    public class InvertedListMap extends Mapper<IntWritable/*docid*/, Text/*doc content*/, Text, IntWritable> {
+    public class InvertedListMap extends Mapper<IntWritable, Text, Text, IntWritable> {
 
         /**
-         *
          * @param key docId
          * @param value document
-         * @param context
-         * @throws IOException
-         * @throws InterruptedException
          */
         @Override
-        protected void map(IntWritable key, Text value, Context context)
-                throws IOException, InterruptedException {
+        protected void map(IntWritable key, Text value, Context context) throws IOException, InterruptedException {
             //termFreqs: 单词在document中出现的次数
-            HashMap<Text, IntWritable> freqs = new HashMap<Text, IntWritable> ();
+            HashMap<Text, IntWritable> freqs = new HashMap<>();
 
             // the document can be preprocessed by third analyzed tool first
             // here is simplify this procedure using split by whitespace instead
             String[] terms = value.toString().split(" ");
             for (String term : terms ) {
                 if (term == null || "".equals(term)) continue;
-
                 if (freqs.containsKey(new Text(term))) {
                     //已经出现过, 次数+1
                     int tf = freqs.get(new Text(term)).get();
@@ -59,15 +52,15 @@ public class InvertedList{
                     //还没出现过, 初始化次数=1
                     freqs.put(new Text(term), new IntWritable(1));
                 }
-            } // end of for loop
+            }
 
-            Iterator<Map.Entry<Text, IntWritable>> entryIter = (Iterator<Map.Entry<Text, IntWritable>>) freqs.entrySet().iterator();
+            Iterator<Map.Entry<Text, IntWritable>> entryIter = freqs.entrySet().iterator();
             while (entryIter.hasNext()) {
                 Map.Entry<Text, IntWritable> entry = entryIter.next();
                 Text tuple = new Text();
                 //term:docId
                 tuple.set(entry.getKey().toString() + ":" + key.toString());
-                //termFreqs
+                //output termFreqs : (term:docId, count)
                 context.write(tuple, freqs.get(entry.getKey()));
             }
         }
@@ -75,7 +68,6 @@ public class InvertedList{
     }
 
     public class InvertedListReduce extends Reducer <Text, IntWritable, Text, Map<IntWritable, IntWritable>> {
-
         private String term = null;
         private Map<IntWritable, IntWritable> posting = null;
 
@@ -83,11 +75,6 @@ public class InvertedList{
         protected void setup(Context context) throws IOException, InterruptedException {
             term = null;
             posting = new TreeMap<IntWritable, IntWritable>();
-        }
-
-        @Override
-        protected void cleanup(Context context) throws IOException, InterruptedException {
-            context.write(new Text(term), posting);
         }
 
         /**
@@ -111,9 +98,6 @@ public class InvertedList{
          *
          * @param key
          * @param values
-         * @param context
-         * @throws IOException
-         * @throws InterruptedException
          */
         @Override
         protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -134,5 +118,9 @@ public class InvertedList{
             }
         }
 
+        @Override
+        protected void cleanup(Context context) throws IOException, InterruptedException {
+            context.write(new Text(term), posting);
+        }
     }
 }

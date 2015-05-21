@@ -16,12 +16,9 @@ import org.apache.hadoop.util.GenericOptionsParser;
  */
 public class DistributedGrep {
 
-	public static class GrepMapper extends
-			Mapper<Object, Text, NullWritable, Text> {
+	public static class GrepMapper extends Mapper<Object, Text, NullWritable, Text> {
 
-		public void map(Object key, Text value, Context context)
-				throws IOException, InterruptedException {
-
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String txt = value.toString();
 			String mapRegex = context.getConfiguration().get("mapregex");
 

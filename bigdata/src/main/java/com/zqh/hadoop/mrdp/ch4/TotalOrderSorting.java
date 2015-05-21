@@ -77,12 +77,10 @@ public class TotalOrderSorting {
      * The partitioner ensures that the concatenation of
      * all these part files (in order) produces a totally ordered data set.
      */
-	public static class ValueReducer extends
-			Reducer<Text, Text, Text, NullWritable> {
+	public static class ValueReducer extends Reducer<Text, Text, Text, NullWritable> {
 
 		@Override
-		public void reduce(Text key, Iterable<Text> values, Context context)
-				throws IOException, InterruptedException {
+		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 			for (Text t : values) {
 				context.write(t, NullWritable.get());
 			}
@@ -109,6 +107,9 @@ public class TotalOrderSorting {
 
         // 输入路径(要排序的文件), 分区文件(确定有哪些分区), Map的输出路径, 全排序的输出路径
 		Path inputPath = new Path(otherArgs[0]);
+        //Creates path files to the partition list and the staging directory.
+        //The partition list is used by the TotalOrderPartitioner to make sure the key/value pairs are sorted properly.
+        //The staging directory is used to store intermediate output between the two jobs
 		Path partitionFile = new Path(otherArgs[1] + "_partitions.lst");
 		Path outputStage = new Path(otherArgs[1] + "_staging");
 		Path outputOrder = new Path(otherArgs[1]);
@@ -119,11 +120,12 @@ public class TotalOrderSorting {
 		FileSystem.get(new Configuration()).delete(partitionFile, true);
 
 		// Configure job to prepare for sampling
+        // the first job is a map-only only job that uses a SequenceFileOutputFormat
 		Job sampleJob = new Job(conf, "TotalOrderSortingStage");
 		sampleJob.setJarByClass(TotalOrderSorting.class);
 
 		// Use the mapper implementation with zero reduce tasks
-        // 第一个Job使用的Map只是根据lastAccessDate直接输出, 没看到sample的过程..
+        // 第一个Job使用的Map只是根据lastAccessDate直接输出, 没看到sample的过程..??
 		sampleJob.setMapperClass(LastAccessDateMapper.class);
 		sampleJob.setNumReduceTasks(0);
 
@@ -175,9 +177,9 @@ public class TotalOrderSorting {
 
 			// Use the InputSampler to go through the output of the previous
 			// job, sample it, and create the partition file
-            // writes the partition file by reading through the configured input directory of the job.
+            // writes the partition file by reading through the **configured input directory of the job**.
             // 注意参数是第二个Job, 我们是对第一个Job的输出进行取样, 为什么这里却是第二个Job.
-            // InputSampler的Job参数是输入对应的Job, 第一个Job是输出, 对于第二个Job就是输入.
+            // InputSampler的Job参数是**输入对应的Job**, 第一个Job是输出, 对于第二个Job就是输入.
 
             // 对第一个Job的输出结果进行取样. 第一个Job的key是lastAccessDate, 即会对lastAccessDate进行取样
             // 注意第一个Job并没有进行取样. 取样的工作在第二个Job的这里!!!
@@ -185,7 +187,7 @@ public class TotalOrderSorting {
             // 这样第二个Job的Reduce过程会对每个分区里的数据进行排序.
 			InputSampler.writePartitionFile(orderJob, new InputSampler.RandomSampler(sampleRate, 10000));
 
-			// Submit the job
+			// Submit the job: After the partition file is written, the 2nd job is executed.
 			code = orderJob.waitForCompletion(true) ? 0 : 2;
 		}
 

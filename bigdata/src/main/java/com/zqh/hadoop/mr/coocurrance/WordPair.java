@@ -36,14 +36,14 @@ public class WordPair implements Writable,WritableComparable<WordPair> {
     public int compareTo(WordPair other) {
         int returnVal = this.word.compareTo(other.getWord());
         if(returnVal != 0){
-            return returnVal;
+            return returnVal;	// 如果word不同, 就不需要比较neighbour了. 后面的逻辑是在word相同的情况下
         }
         if(this.neighbor.toString().equals("*")){
-            return -1;
+            return -1;	    // 如果当前WordPair包含*, 则当前WordPair要排在最前面, 返回值-1表示升序排列
         }else if(other.getNeighbor().toString().equals("*")){
-            return 1;
+            return 1;		// 如果是其他WordPair包含*, 则说明当前WordPair没有包含*, 返回值为1表示当前WordPair排在后面
         }
-        return this.neighbor.compareTo(other.getNeighbor());
+        return this.neighbor.compareTo(other.getNeighbor());  // 都不包含*, 也要根据neighbor进行排序
     }
 
     public static WordPair read(DataInput in) throws IOException {

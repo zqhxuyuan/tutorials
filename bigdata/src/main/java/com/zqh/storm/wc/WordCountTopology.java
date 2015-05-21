@@ -6,6 +6,30 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 
+/**
+ * 1. 首先启动ZooKeeper
+ * 2. 在IDE中直接运行, 由于没有参数, 使用本地模式.
+ * 3. 输出结果:
+ --- FINAL COUNTS ---
+ a : 2487
+ ate : 2488
+ beverages : 2488
+ cold : 2488
+ cow : 2487
+ dog : 4976
+ don't : 4974
+ fleas : 4976
+ has : 2488
+ have : 2487
+ homework : 2488
+ i : 7464
+ like : 4976
+ man : 2487
+ my : 4976
+ the : 2488
+ think : 2487
+ --------------
+ */
 public class WordCountTopology {
 
 	private static final String SENTENCE_SPOUT_ID = "sentence-spout";
