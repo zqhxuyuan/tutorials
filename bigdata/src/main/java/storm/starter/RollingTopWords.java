@@ -59,15 +59,24 @@ public class RollingTopWords {
   }
 
   private void wireTopology() throws InterruptedException {
-    String spoutId = "wordGenerator";
-    String counterId = "counter";
-    String intermediateRankerId = "intermediateRanker";
-    String totalRankerId = "finalRanker";
-    builder.setSpout(spoutId, new TestWordSpout(), 5);
-    builder.setBolt(counterId, new RollingCountBolt(9, 3), 4).fieldsGrouping(spoutId, new Fields("word"));
-    builder.setBolt(intermediateRankerId, new IntermediateRankingsBolt(TOP_N), 4).fieldsGrouping(counterId, new Fields(
-        "obj"));
-    builder.setBolt(totalRankerId, new TotalRankingsBolt(TOP_N)).globalGrouping(intermediateRankerId);
+      String spoutId = "wordGenerator";
+      String counterId = "counter";
+      String intermediateRankerId = "intermediateRanker";
+      String totalRankerId = "finalRanker";
+
+      builder.setSpout(spoutId, new TestWordSpout(), 5);
+
+      //count
+      builder.setBolt(counterId, new RollingCountBolt(30, 10), 4)
+              .fieldsGrouping(spoutId, new Fields("word"));
+
+      //rank
+      builder.setBolt(intermediateRankerId, new IntermediateRankingsBolt(TOP_N), 4)
+              .fieldsGrouping(counterId, new Fields("obj"));
+
+      //merge
+      builder.setBolt(totalRankerId, new TotalRankingsBolt(TOP_N))
+              .globalGrouping(intermediateRankerId);
   }
 
   public void runLocally() throws InterruptedException {

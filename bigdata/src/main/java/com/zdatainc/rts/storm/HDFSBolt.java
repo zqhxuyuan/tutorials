@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+
+import com.zdatainc.rts.model.Properties;
 import org.apache.log4j.Logger;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;

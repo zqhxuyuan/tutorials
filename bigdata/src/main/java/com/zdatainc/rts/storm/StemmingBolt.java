@@ -1,5 +1,6 @@
 package com.zdatainc.rts.storm;
 
+import com.zdatainc.rts.model.StopWords;
 import org.apache.log4j.Logger;
 import java.util.Map;
 import java.util.List;

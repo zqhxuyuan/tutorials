@@ -1,5 +1,6 @@
 package com.zdatainc.rts.storm;
 
+import com.zdatainc.rts.model.Properties;
 import org.apache.log4j.Logger;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.BasicOutputCollector;

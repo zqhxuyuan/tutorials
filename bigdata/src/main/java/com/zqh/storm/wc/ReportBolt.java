@@ -9,8 +9,12 @@ import backtype.storm.tuple.Tuple;
 import java.util.*;
 
 public class ReportBolt extends BaseRichBolt {
-
 	private HashMap<String, Long> counts = null;
+
+    @Override
+    public void prepare(Map config, TopologyContext context, OutputCollector collector) {
+        this.counts = new HashMap<String, Long>();
+    }
 
 	@Override
 	public void execute(Tuple tuple) {
@@ -20,14 +24,7 @@ public class ReportBolt extends BaseRichBolt {
 	}
 
 	@Override
-	public void prepare(Map config, TopologyContext context,
-			OutputCollector collector) {
-		this.counts = new HashMap<String, Long>();
-	}
-
-	@Override
-	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-	}
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {}
 
 	public void cleanup() {
 		System.out.println("--- FINAL COUNTS ---");
@@ -40,5 +37,4 @@ public class ReportBolt extends BaseRichBolt {
 		}
 		System.out.println("--------------");
 	}
-
 }

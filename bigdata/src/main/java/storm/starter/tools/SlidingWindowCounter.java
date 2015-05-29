@@ -35,6 +35,7 @@ import java.util.Map;
  * this is the desired behavior.
  * <p/>
  * To give an example, using a counter with 5 slots which for the sake of this example represent 1 minute of time each:
+ * 下面的例子假设每隔1分钟,统计过去5分钟的数量.
  * <p/>
  * <pre>
  * {@code
@@ -43,10 +44,10 @@ import java.util.Map;
  * Minute (timeline):
  * 1    2   3   4   5   6   7   8
  *
- * Observed counts per minute:
+ * Observed counts per minute: 在每一分钟上发生的计数
  * 1    1   1   1   0   0   0   0
  *
- * Counts returned by counter:
+ * Counts returned by counter: 在某个时间点(每隔一分钟)上观察到的过去5分钟的计数值
  * 1    2   3   4   4   3   2   1
  * }
  * </pre>
@@ -67,53 +68,55 @@ import java.util.Map;
  */
 public final class SlidingWindowCounter<T> implements Serializable {
 
-  private static final long serialVersionUID = -2645063988768785810L;
+    private static final long serialVersionUID = -2645063988768785810L;
 
-  private SlotBasedCounter<T> objCounter;
-  private int headSlot;
-  private int tailSlot;
-  private int windowLengthInSlots;
+    private SlotBasedCounter<T> objCounter;
+    private int headSlot;   // head is the current slot
+    private int tailSlot;   // tail is the next slot
+    private int windowLengthInSlots;
 
-  public SlidingWindowCounter(int windowLengthInSlots) {
-    if (windowLengthInSlots < 2) {
-      throw new IllegalArgumentException(
-          "Window length in slots must be at least two (you requested " + windowLengthInSlots + ")");
+    //假设每隔3分钟统计过去9分钟的数据,则slots=9/3=3
+    //head=0, tail=1%3=1. tail是head的next slot.
+    public SlidingWindowCounter(int windowLengthInSlots) {
+        if (windowLengthInSlots < 2) {
+            throw new IllegalArgumentException(
+                    "Window length in slots must be at least two (you requested " + windowLengthInSlots + ")");
+        }
+        this.windowLengthInSlots = windowLengthInSlots;
+        this.objCounter = new SlotBasedCounter<T>(this.windowLengthInSlots);
+
+        this.headSlot = 0;
+        this.tailSlot = slotAfter(headSlot);
     }
-    this.windowLengthInSlots = windowLengthInSlots;
-    this.objCounter = new SlotBasedCounter<T>(this.windowLengthInSlots);
 
-    this.headSlot = 0;
-    this.tailSlot = slotAfter(headSlot);
-  }
+    public void incrementCount(T obj) {
+        objCounter.incrementCount(obj, headSlot);
+    }
 
-  public void incrementCount(T obj) {
-    objCounter.incrementCount(obj, headSlot);
-  }
+    /**
+     * Return the current (total) counts of all tracked objects, then advance the window.
+     * <p/>
+     * Whenever this method is called, we consider the counts of the current sliding window to be available to and
+     * successfully processed "upstream" (i.e. by the caller). Knowing this we will start counting any subsequent
+     * objects within the next "chunk" of the sliding window.
+     *
+     * @return The current (total) counts of all tracked objects.
+     */
+    public Map<T, Long> getCountsThenAdvanceWindow() {
+        Map<T, Long> counts = objCounter.getCounts();
+        objCounter.wipeZeros();
+        objCounter.wipeSlot(tailSlot);
+        advanceHead();
+        return counts;
+    }
 
-  /**
-   * Return the current (total) counts of all tracked objects, then advance the window.
-   * <p/>
-   * Whenever this method is called, we consider the counts of the current sliding window to be available to and
-   * successfully processed "upstream" (i.e. by the caller). Knowing this we will start counting any subsequent
-   * objects within the next "chunk" of the sliding window.
-   *
-   * @return The current (total) counts of all tracked objects.
-   */
-  public Map<T, Long> getCountsThenAdvanceWindow() {
-    Map<T, Long> counts = objCounter.getCounts();
-    objCounter.wipeZeros();
-    objCounter.wipeSlot(tailSlot);
-    advanceHead();
-    return counts;
-  }
+    private void advanceHead() {
+        headSlot = tailSlot;
+        tailSlot = slotAfter(tailSlot);
+    }
 
-  private void advanceHead() {
-    headSlot = tailSlot;
-    tailSlot = slotAfter(tailSlot);
-  }
-
-  private int slotAfter(int slot) {
-    return (slot + 1) % windowLengthInSlots;
-  }
+    private int slotAfter(int slot) {
+        return (slot + 1) % windowLengthInSlots;
+    }
 
 }

@@ -39,39 +39,62 @@ public class WordCountTopology {
 	private static final String TOPOLOGY_NAME = "word-count-topology";
 
 	public static void main(String[] args) throws Exception {
-		SentenceSpout spout = new SentenceSpout();
-		SplitSentenceBolt splitBolt = new SplitSentenceBolt();
-		WordCountBolt countBolt = new WordCountBolt();
-		ReportBolt reportBolt = new ReportBolt();
-		
-		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout(SENTENCE_SPOUT_ID, spout, 2);
-		
-		// SentenceSpout --> SplitSentenceBolt
-		builder.setBolt(SPLIT_BOLT_ID, splitBolt, 2)
-			.setNumTasks(4)
-			.shuffleGrouping(SENTENCE_SPOUT_ID);
-		
-		// SplitSentenceBolt --> WordCountBolt
-		builder.setBolt(COUNT_BOLT_ID, countBolt, 4)
-			.fieldsGrouping(SPLIT_BOLT_ID, new Fields("word"));
-		
-		builder.setBolt(REPORT_BOLT_ID, reportBolt)
-			.globalGrouping(COUNT_BOLT_ID);
-		
-		Config config = new Config();
-		config.setNumWorkers(2);
+        /**
+         * INPUT:
+         *   Hello World
+         *   Hello Storm
+         *
+         * Spout的并行度设置为2, 则会发送两次
+         *   Hello : 4
+         *   Storm : 2
+         *   World : 2
+         *
+         * Spout的并行度设置为1, 只会发送一次
+         *   Hello : 2
+         *   Storm : 1
+         *   World : 1
+         */
+        TopologyBuilder builder = buildTopology(1,2,4,4);
+        //TopologyBuilder builder = buildTopology(2,2,4,4);
+        Config config = new Config();
+        config.setNumWorkers(2);
 
-		if(args.length == 0){
-			LocalCluster cluster = new LocalCluster();
-			cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
-			
-	    	Thread.sleep(10000);
-			
-			cluster.killTopology(TOPOLOGY_NAME);
-			cluster.shutdown();
-		} else{
-			StormSubmitter.submitTopology(args[0], config, builder.createTopology());
-		}
+        if(args.length == 0){
+            LocalCluster cluster = new LocalCluster();
+            cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
+
+            Thread.sleep(10000);
+
+            cluster.killTopology(TOPOLOGY_NAME);
+            cluster.shutdown();
+        } else{
+            StormSubmitter.submitTopology(args[0], config, builder.createTopology());
+        }
 	}
+
+    /**
+     * @param pSpout Spout的并行度, 注意在本示例中,如果大于1,表示发送了多次!
+     * @param pSSBolt SplitSentenceBolt的并行度
+     * @param tSSBolt SplitSentenceBolt的任务数
+     * @param pWCBolt WordCount的并行度
+     * @return
+     */
+    public static TopologyBuilder buildTopology(int pSpout, int pSSBolt, int tSSBolt, int pWCBolt){
+        TopologyBuilder builder = new TopologyBuilder();
+        builder.setSpout(SENTENCE_SPOUT_ID, new SentenceSpout1(), pSpout);
+
+        // SentenceSpout --> SplitSentenceBolt
+        builder.setBolt(SPLIT_BOLT_ID, new SplitSentenceBolt(), pSSBolt)
+                .setNumTasks(tSSBolt)
+                .shuffleGrouping(SENTENCE_SPOUT_ID);
+
+        // SplitSentenceBolt --> WordCountBolt
+        builder.setBolt(COUNT_BOLT_ID, new WordCountBolt(), pWCBolt)
+                .fieldsGrouping(SPLIT_BOLT_ID, new Fields("word"));
+
+        // WordCountBolt --> ReportBolt
+        //builder.setBolt(REPORT_BOLT_ID, new ReportBolt()).globalGrouping(COUNT_BOLT_ID);
+
+        return builder;
+    }
 }

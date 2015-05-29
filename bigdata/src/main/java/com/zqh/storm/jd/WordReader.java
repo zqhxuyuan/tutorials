@@ -50,8 +50,7 @@ public class WordReader extends BaseRichSpout {
         System.out.println("FAIL:"+msgId);
     }
     /*
-    * 在 SpoutTracker 类中被调用,每调用一次就可以向 storm 集群中发射一
-    条数据(一个 tuple 元组),该方法会被不停的调用
+    * 在 SpoutTracker 类中被调用,每调用一次就可以向 storm 集群中发射一条数据(一个 tuple 元组),该方法会被不停的调用
     */
     public void nextTuple() {
         if(completed){
@@ -87,14 +86,10 @@ public class WordReader extends BaseRichSpout {
         this.collector = collector;
     }
     /**
-     * 定义字段 id,该 id 在简单模式下没有用处,但在按照字段分组的模式下
-     有很大的用处。
-     * 该 declarer 变量有很大作用,我们还可以调用
-     declarer.declareStream();来定义 stramId,该 id 可以用来定义更加复杂
-     的流拓扑结构
+     * 定义字段 id,该 id 在简单模式下没有用处,但在按照字段分组的模式下有很大的用处。
+     * 该 declarer 变量有很大作用,我们还可以调用declarer.declareStream();来定义 stramId,该 id 可以用来定义更加复杂的流拓扑结构
      */
-    public void declareOutputFields(OutputFieldsDeclarer
-                                            declarer) {
+    public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("line"));
     }
 }

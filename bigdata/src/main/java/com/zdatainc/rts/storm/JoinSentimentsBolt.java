@@ -1,5 +1,6 @@
 package com.zdatainc.rts.storm;
 
+import com.zdatainc.rts.model.Triple;
 import org.apache.log4j.Logger;
 import java.util.HashMap;
 import backtype.storm.topology.BasicOutputCollector;

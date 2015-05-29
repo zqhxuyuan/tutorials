@@ -1,5 +1,6 @@
 package com.zdatainc.rts.storm;
 
+import com.zdatainc.rts.model.NegativeWords;
 import org.apache.log4j.Logger;
 import java.util.Set;
 import backtype.storm.topology.BasicOutputCollector;

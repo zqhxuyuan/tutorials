@@ -1,0 +1,15 @@
+package com.zqh.akka.essentials.typedactor.calculator
+
+import akka.actor.TypedActor.Receiver
+import scala.concurrent.{Promise, Future}
+
+trait CalculatorInt extends Receiver  {
+
+	def add(first: Int, second: Int): Future[Int]
+
+	def subtract(first: Int, second: Int): Future[Int]
+
+	def incrementCount(): Unit
+
+	def incrementAndReturn(): Option[Int]
+}

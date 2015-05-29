@@ -74,9 +74,8 @@ public class TopologyMain {
         * Local or shuffle grouping:如果目标 bolt 有一个或者多个 task 在同一个工作进程中,tuple 将会被随机发生给这些 tasks。
         * 否则,和普通的 Shuffle Grouping 行为一致。
         */
-        builder.setBolt("word-counter", new
-                WordCounter(), 1).fieldsGrouping("word-normalizer", new
-                Fields("word"));
+        builder.setBolt("word-counter", new WordCounter(), 1)
+                .fieldsGrouping("word-normalizer", new Fields("word"));
         /*
         * storm 的运行有两种模式: 本地模式和分布式模式.
         * 1) 本地模式:
@@ -109,8 +108,7 @@ public class TopologyMain {
         * topology 的名字是用来唯一区别一个 topology 的,这样你然后可以用这个名字来杀死这个 topology 的。前面已经说过了, 你必须显式的杀掉一个 topology, 否则它会一直运行。
         */
         LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("wordCounterTopology", conf,
-                builder.createTopology());
+        cluster.submitTopology("wordCounterTopology", conf, builder.createTopology());
         Thread.sleep(1000);
         cluster.killTopology("wordCounterTopology");
         cluster.shutdown();
