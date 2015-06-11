@@ -14,11 +14,10 @@
         <module>concurrency</module>
         <module>middleware</module>
         <module>algs</module>
-
         <module>bigdata</module>
         <module>scala</module>
-
         <module>soa</module>
+        <module>wordcount</module>
     </modules>
 
     <properties>

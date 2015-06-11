@@ -593,10 +593,10 @@
         </dependency>
 
         <!--hadoop/dataguru token-->
-        <dependency>
-            <groupId>net.paoding</groupId>
-            <artifactId>paoding-analysis</artifactId>
-            <version>2.0.4</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.paoding</groupId>-->
+            <!--<artifactId>paoding-analysis</artifactId>-->
+            <!--<version>2.0.4</version>-->
+        <!--</dependency>-->
     </dependencies>
 </project>

@@ -44,14 +44,19 @@ public class WordCount {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        //args = new String[]{"/test001","/test001-out"};
-        //args = new String[]{"hdfs://127.0.0.1:9000/input/helloworld","hdfs://127.0.0.1:9000/output/wc"};
-        //args = new String[]{"hdfs://172.17.212.67:8020/test001","hdfs://172.17.212.67:8020/test001-out"};
-
-        args = new String[]{
-                "/home/hadoop/data/mralgs/wc",
-                "/home/hadoop/tmp/wc",
-        };
+        // 1. 默认本地文件系统
+        args = new String[]{"/test001","/test001-out"};
+        args = new String[]{"/home/hadoop/data/mralgs/wc", "/home/hadoop/tmp/wc",};
+        // 2. 如果是hdfs，则必须加上hdfs://前缀
+        args = new String[]{"hdfs://127.0.0.1:9000/README.txt","hdfs://127.0.0.1:9000/output/wc3"};
+        args = new String[]{"hdfs://172.17.212.67:8020/test001","hdfs://172.17.212.67:8020/test001-out"};
+        // 3. 在远程运行，但是实际上还是在本地起了hadoop.所以实际上没用到远程的hadoop集群
+        // 所以我们的目的应该是要把作业提交到远程的Hadoop集群去执行.
+        // TODO -> RemoteYarnApp
+        args = new String[]{"hdfs://192.168.6.52:9000/user/qiaoshi.wang/examples/input-data/text",
+                            "hdfs://192.168.6.52:9000/user/qiaoshi.wang/examples/output/wc3"};
+        //conf.set("mapreduce.framework.name", "yarn");
+        //conf.set("yarn.resourcemanager.address", "192.168.6.52:23140");
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         /*
