@@ -13,7 +13,8 @@ object AmpCamp5 {
   def main(args: Array[String]) {
     //pagecounts
     //tachyon
-    sparkSQL
+    //sparkSQL
+    wordcount
   }
 
   // ----------------------------------------------------------------------------
@@ -94,6 +95,21 @@ object AmpCamp5 {
     println(counts2.take(10).mkString("\n"))
   }
 
+  def wordcount {
+    sc.textFile("file:/home/hadoop/data/helloworld2.txt")
+      .flatMap(line => line.split(" "))
+      .map(word => (word, 1))
+      .reduceByKey(_ + _)
+      .collect().foreach(println)
+
+
+    sc.textFile("file:/home/hadoop/data/helloworld2.txt")
+      .flatMap(_.split(" "))
+      .map((_, 1))
+      .reduceByKey(_ + _)
+      .collect().foreach(println)
+  }
+
   // -------------------------------------------------------------------------
   // http://ampcamp.berkeley.edu/5/exercises/data-exploration-using-spark.html
   // -------------------------------------------------------------------------
@@ -133,12 +149,13 @@ object AmpCamp5 {
     enPages.map(line => line.split(" ")).map(line => (line(0).substring(0, 8), line(3).toInt)).reduceByKey(_+_, 1).collect
 
     // 4. find pages that were viewed more than 200,000 times
-    enPages.map(l => l.split(" "))          // split each line of data into its respective fields.
+    enPages.map(l => l.split(" "))    // split each line of data into its respective fields.
       .map(l => (l(2), l(3).toInt))   // extract the fields for page name and number of page views.
       .reduceByKey(_+_, 40)           // reduce by key again, this time with 40 reducers.
       .filter(x => x._2 > 200000)     // filter out pages with less than 200,000 total views
       .map(x => (x._2, x._1))         // change position of pagename and #pageviews
-      .collect.foreach(println)       // print the result
+      .collect                        // return Array[T]
+      .foreach(println)               // print the result
   }
 
   // ----------------------------------------------------
