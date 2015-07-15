@@ -1,4 +1,4 @@
-package cn.tongdun.hadoop;
+package cn.tongdun.bigdata.hive;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;

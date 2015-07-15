@@ -8,10 +8,14 @@ import java.sql.DriverManager;
 
 /**
  * Created by zqhxuyuan on 15-3-10.
+ *
+ * 1.   start-dfs.sh
+ * [2]. start-yarn.sh
+ * 3.   hiveserver2
  */
 public class HiveJDBCTest {
 
-    private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
+    private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
     public static void main(String[] args) throws SQLException {
         try {
@@ -21,7 +25,10 @@ public class HiveJDBCTest {
             System.exit(1);
         }
 
-        Connection con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "hadoop", "");
+        //UserName: 操作系统的用户名, 不是hive meta-store的用户名
+        //为什么是操作系统的用户名呢? 因为在创建hdfs的/usr/hive/warehouse目录时是用当前操作系统的用户执行hadoop fs -mkdir创建的
+        //创建后数据仓库目录的用户就是操作系统的当前用户.要建表也是在这个目录下的数据库(默认是default)下新建文件夹的
+        Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "zhengqh", "");
         Statement stmt = con.createStatement();
         String tableName = "jdbcTest";
         stmt.execute("drop table if exists " + tableName);

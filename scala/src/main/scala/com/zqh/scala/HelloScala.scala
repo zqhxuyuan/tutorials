@@ -43,10 +43,10 @@ object HelloScala {
   //http://stackoverflow.com/questions/20215518/scala-map-flatten-and-flatmap-not-equivalent
   def testFlatMap(){
 
-    val possib
     case class CTest(v: Int)
-    val s = Set(Map(CTest(0) -> List(0, 3), CTest(1) -> List(0, 2)))ilities = s flatMap { m =>
-      val mapping = m flatMap {
+    val s = Set(Map(CTest(0) -> List(0, 3), CTest(1) -> List(0, 2)))
+    val possibilities = s flatMap { m =>
+      val mapping = m.toIterable.flatMap {
         case (label, destNodes) => destNodes map {
           case nodes => (label, nodes) }
       }

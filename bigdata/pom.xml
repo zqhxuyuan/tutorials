@@ -32,22 +32,25 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <hbase.version>0.98.6-cdh5.2.0</hbase.version> <!--0.98.6-cdh5.2.0-->
-        <hive.version>0.13.1-cdh5.2.0</hive.version>
-        <crunch.version>0.11.0-hadoop2</crunch.version> <!-- 0.11.0-cdh5.2.0, 0.11.0-hadoop2 -->
-        <mahout.version>0.9-cdh5.2.0</mahout.version> <!--0.6,0.9-cdh5.2.0-->
-        <cassandra.version>2.1.2</cassandra.version>
-        <flume.version>1.4.0</flume.version>
-        <tachyon.version>0.5.0</tachyon.version>
+        <hadoop.version>2.6.0-cdh5.4.2</hadoop.version>
+        <hbase.version>1.0.0-cdh5.4.2</hbase.version>       <!-- 0.98.6-cdh5.2.0,-->
+        <hive.version>1.1.0-cdh5.4.2</hive.version>         <!-- 0.13.1-cdh5.2.0 -->
+        <crunch.version>0.11.0-cdh5.4.2</crunch.version>    <!-- 0.11.0-cdh5.2.0, 0.11.0-hadoop2 -->
+        <mahout.version>0.9-cdh5.2.0</mahout.version>       <!-- 0.6,0.9-cdh5.2.0 -->
+        <flume.version>1.5.0-cdh5.4.2</flume.version>       <!-- 1.4.0,1.5.0-cdh5.4.2 -->
+        <parquet.version>1.5.0-cdh5.4.2</parquet.version>
+        <parquet-apache.version>1.7.0</parquet-apache.version>
 
+        <cassandra.version>2.1.2</cassandra.version>
         <giraph.version>1.1.0-hadoop2</giraph.version>
-        <flink.version>0.8.0</flink.version><!--0.7.0-hadoop2-incubating-->
-        <tez.version>0.6.0</tez.version><!--0.5.3-->
+        <flink.version>0.8.0</flink.version>                <!-- 0.7.0-hadoop2-incubating -->
+        <tez.version>0.6.0</tez.version>                    <!-- 0.5.3-->
         <cascading.version>2.6.1</cascading.version>
         <samza.version>0.8.0</samza.version>
 
         <storm.version>0.9.4</storm.version>
-        <spark.version>1.3.0</spark.version>
+        <spark.version>1.3.0</spark.version>                <!-- spark-1.3.0-cdh5.4.2 -->
+        <tachyon.version>0.6.4</tachyon.version>
     </properties>
 
     <dependencies>
@@ -105,25 +108,41 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-common</artifactId>
             <version>${hbase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hadoop-core</artifactId>
+                    <groupId>org.apache.hadoop</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-server</artifactId>
             <version>${hbase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hadoop-core</artifactId>
+                    <groupId>org.apache.hadoop</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!--
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-jdbc</artifactId>
             <version>${hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>parquet-hadoop-bundle</artifactId>
+                    <groupId>com.twitter</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
             <version>${hive.version}</version>
         </dependency>
-        -->
 
         <!-- flume -->
         <dependency>
@@ -141,6 +160,12 @@
             <groupId>org.apache.crunch</groupId>
             <artifactId>crunch-core</artifactId>
             <version>${crunch.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>parquet-avro</artifactId>
+                    <groupId>com.twitter</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.crunch</groupId>
@@ -221,6 +246,65 @@
             </exclusions>
         </dependency>
         -->
+
+        <!--
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-encoding</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>${parquet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-format</artifactId>
+            <version>2.1.0-cdh5.4.2</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet</artifactId>
+            <version>${parquet-apache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-format</artifactId>
+            <version>2.3.0-incubating</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>${parquet-apache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-encoding</artifactId>
+            <version>${parquet-apache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>${parquet-apache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>${parquet-apache.version}</version>
+        </dependency>
 
         <!-- Graph -->
         <dependency>

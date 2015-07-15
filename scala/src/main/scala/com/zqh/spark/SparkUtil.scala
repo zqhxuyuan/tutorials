@@ -25,9 +25,9 @@ object SparkUtil {
     sqlContext
   }
 
-  def getStreamContext(appName : String = "SimpleApp", master : String = "local") : StreamingContext = {
+  def getStreamContext(appName : String = "SimpleApp", master : String = "local", seconds : Long = 1) : StreamingContext = {
     val conf = new SparkConf().setAppName(appName).setMaster(master)
-    val ssc = new StreamingContext(conf, Seconds(1))
+    val ssc = new StreamingContext(conf, Seconds(seconds))
     ssc
   }
 

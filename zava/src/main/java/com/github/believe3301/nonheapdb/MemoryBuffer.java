@@ -202,7 +202,6 @@ public class MemoryBuffer {
 	/*
 	 * find free block by length (best fit), if free block is too large, would to split
 	 * 给定长度,寻找最适合的块. 如果空闲块太大,则进行分裂.
-	 *
 	 * 注意:调用该方法后,如果没有分裂,则找到的那个空闲块会从fp中删除,并返回给客户端
 	 * 如果空闲块太大,分裂后,假设原先有一个空闲块,调用该方法后,还会剩余一个新分裂出来的空闲块.
 	 * 但是注意返回给客户端的是客户端要求长度的空闲块.而不是新分裂出的空闲块.

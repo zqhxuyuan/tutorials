@@ -22,7 +22,7 @@ public class TestRedis {
     public void setup() {
         //jedis = new Jedis("172.17.212.73", 6379);
         //jedis.auth("admin");
-        jedis = new Jedis("localhost", 6379);
+        jedis = new Jedis("192.168.6.52", 6379);
     }
 
     /**
