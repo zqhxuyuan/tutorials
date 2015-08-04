@@ -1,0 +1,6 @@
+20150804
+
+Exclude com.zqh.scala.cache as it cause idea compile error.
+Remove Spark Code as it exist in tongdun project, no need here.
+Independent Project from tutorial parent.
+

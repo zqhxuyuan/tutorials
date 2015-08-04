@@ -26,6 +26,8 @@ object HelloAkka extends App{
   // 1. create a msg: Greeting
   // 2. send this msg to Actor
   greeter ! Greeting("Charlie Parker")
+
+  system.shutdown()
 }
 
 
