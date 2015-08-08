@@ -1,0 +1,36 @@
+option java_generic_services = true;
+option java_package = "com.zqh.protobuf"; 
+option java_outer_classname = "Message";
+message Request {
+	// RPC service name  
+	required string serviceName = 1;
+	// RPC method name  default execute
+    optional string methodName = 2;
+    // RPC params
+    optional Params params = 3;
+}
+
+message Params {
+	required string key = 1;
+	optional string value = 2;
+}
+
+message Msg {
+	optional string content = 1;
+ }
+
+message Response {
+	// RPC response code
+	required int32 code =1 [default = 0];
+	// RPC response code msg
+	required string msg =2 [default = "请求成功"];
+	optional string data = 3;
+}
+//interface
+service RpcService {
+    rpc call(Request) returns (Response);
+}
+
+service ReplyService {
+	rpc call(Msg) returns (Msg);
+}
