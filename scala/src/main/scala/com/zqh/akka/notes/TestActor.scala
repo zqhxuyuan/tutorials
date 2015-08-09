@@ -1,7 +1,7 @@
 package com.zqh.akka.notes
 
 import akka.actor.{Props, ActorSystem}
-import akka.testkit.{EventFilter, TestActorRef, TestKit}
+import akka.testkit.{ImplicitSender, EventFilter, TestActorRef, TestKit}
 import com.typesafe.config.ConfigFactory
 import com.zqh.akka.notes.TeacherProtocol._
 import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpecLike}
@@ -16,9 +16,18 @@ class TestActor extends TestKit(
     //And our config Logger subscribe the topic, once producer publish msg to topic, the consumer will receive the msg from the topic,
     //then the consumer:Logger can do it on his own, like write to file or output to std console
     //And If we overwrite the subscriber, like Logger before, the TestEventListener will do the same job in his way.
-    ,ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")
+
+    //,ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")
+    ,ConfigFactory.parseString("""
+                                akka{
+                                  loggers = ["akka.testkit.TestEventListener"]
+                                  test{
+                                      filter-leeway = 7s
+                                  }
+                                }
+                              """)
   ))
-  with WordSpecLike with MustMatchers with BeforeAndAfterAll {
+  with WordSpecLike with MustMatchers with BeforeAndAfterAll with ImplicitSender {
 
   //1. Sends message to the Print Actor. Not even a testcase actually
   "A teacher" must {
@@ -68,10 +77,29 @@ class TestActor extends TestKit(
     }
   }
 
+  //Requet and Response
   "A student" must {
     "log a QuoteResponse eventually when an InitSignal is sent to it" in {
       val teacherRef = system.actorOf(Props[TeacherSendActor], "teacherActor")
       val studentRef = system.actorOf(Props(new StudentActor(teacherRef)), "studentActor")
+
+      EventFilter.info (start="Printing from Student Actor", occurrences=1).intercept{
+        studentRef!InitSignal
+      }
+    }
+  }
+
+  val config=ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")
+  val systemTest=ActorSystem("UniversityMessageSystem", config.withFallback(ConfigFactory.load()))
+  println (system.settings.config.getValue("akka.loggers")) //> SimpleConfigList(["akka.testkit.TestEventListener"])
+
+  //测试调度: Student在收到InitSignal后过5秒后才发送消息给Teacher
+  //确保是TearcherSendActor, 如果是TeacherActor, 没有向StudentActor发送响应, 则会报错:
+  //Timeout (7000 milliseconds) waiting for 1 messages on InfoFilter(None,Left(Printing from Student Actor),false)
+  "A delayed student" must {
+    "fire the QuoteRequest after 5 seconds when an InitSignal is sent to it" in {
+      val teacherRef = system.actorOf(Props[TeacherSendActor], "teacherActorDelayed")
+      val studentRef = system.actorOf(Props(new StudentDelayActor(teacherRef)), "studentDelayedActor")
 
       EventFilter.info (start="Printing from Student Actor", occurrences=1).intercept{
         studentRef!InitSignal
