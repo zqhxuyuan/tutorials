@@ -15,7 +15,15 @@ object HelloAkka extends App{
     // this Actor receive a msg from client api
     def receive = {
       // the msg is kind of Greeting, do sth
-      case Greeting(who) ⇒ log.info("Hello " + who)
+      case Greeting(who) ⇒
+        log.info("Hello " + who)
+        //context.actorSelection("../backup") ! "Hey,Man!"
+        //sender() ! "Got It."
+    }
+  }
+  class BackupActor extends Actor with ActorLogging {
+    def receive = {
+      case who ⇒ log.info("Backup " + who)
     }
   }
 
@@ -23,6 +31,7 @@ object HelloAkka extends App{
   val system = ActorSystem("MySystem")
   // initialize an Actor
   val greeter = system.actorOf(Props[GreetingActor], name = "greeter")
+  system.actorOf(Props[BackupActor], name = "backup")
   // 1. create a msg: Greeting
   // 2. send this msg to Actor
   greeter ! Greeting("Charlie Parker")

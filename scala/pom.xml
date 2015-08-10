@@ -19,7 +19,7 @@
     <properties>
         <scala.version>2.10.4</scala.version>
         <scala.bin.version>2.10</scala.bin.version>
-        <akka.version>2.3.9</akka.version>
+        <akka.version>2.3.12</akka.version>
     </properties>
 
     <dependencies>
@@ -64,6 +64,11 @@
             <artifactId>akka-slf4j_2.10</artifactId>
             <version>${akka.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-cluster_2.10</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.ning</groupId>
@@ -75,11 +80,13 @@
             <artifactId>scalatest_2.10</artifactId>
             <version>2.2.4</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.typesafe.scala-logging</groupId>
             <artifactId>scala-logging-slf4j_2.10</artifactId>
             <version>2.1.2</version>
         </dependency>
+        -->
         <dependency>
             <groupId>com.weiglewilczek.slf4s</groupId>
             <artifactId>slf4s_2.9.1</artifactId>
