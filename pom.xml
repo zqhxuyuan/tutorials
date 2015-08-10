@@ -25,7 +25,7 @@
 
         <zookeeper.version>3.4.5</zookeeper.version>
         <curator.version>2.7.1</curator.version>
-        <netty.version>4.0.25.Final</netty.version>
+        <netty.version>4.0.27.Final</netty.version>
         <spring.version>4.0.9.RELEASE</spring.version>
 
         <!--需要的话在自己的项目中引入相应的maven编译插件-->
