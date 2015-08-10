@@ -1,10 +1,11 @@
 package com.zqh.akka.notes
 
 import akka.actor.{Props, ActorSystem}
-import akka.testkit.{ImplicitSender, EventFilter, TestActorRef, TestKit}
+import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import com.zqh.akka.notes.TeacherProtocol._
 import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpecLike}
+import scala.concurrent.duration._
 
 class TestActor extends TestKit(
   ActorSystem("UniversityMessageSystem"
@@ -106,4 +107,77 @@ class TestActor extends TestKit(
       }
     }
   }
+
+  //DeathWatch
+  "A QuoteRepositoryActor" must {
+    "send back a termination message to the watcher on 4th message" in {
+      val quoteRepository = TestActorRef[QuoteRepositoryActor]
+
+      //用一个测试Actor:TestProbe,监视RepositoryActor
+      val testProbe = TestProbe()
+      testProbe.watch(quoteRepository) //Let's watch the Actor
+
+      within(1000 millis) {
+        var receivedQuotes = List[String]()
+        //向RepositoryActor发送三次消息
+        (1 to 3).foreach(_ => quoteRepository ! QuoteRequest)
+        //QuoteRepositoryActor中如果未满三次,回向sender发送Response
+        receiveWhile() {
+          //每次收到QuoteRepositoryActor的回应,将消息加入到列表中
+          case QuoteResponse(quoteString) => {
+            receivedQuotes = receivedQuotes :+ quoteString
+          }
+        }
+        receivedQuotes.size must be(3)
+        println(s"receiveCount ${receivedQuotes.size}")
+
+        //4th message 当向QuoteRepositoryActor发送第四条消息时,
+        //QuoteRepositoryActor的recive方法会判断到count>3,导致它把自己杀死了!
+        //因为TestProbe一直监控着QuoteRepositoryActor,这时候QuoteRepositoryActor已经被自己杀死了
+        //监控者TestProbe就能收到QuoteRepositoryActor被终结的信息.
+        quoteRepository ! QuoteRequest
+        testProbe.expectTerminated(quoteRepository) //Expect a Terminated Message
+      }
+    }
+
+    "not send back a termination message on 4th message if not watched" in {
+      val quoteRepository=TestActorRef[QuoteRepositoryActor]
+      val testProbe=TestProbe()
+      testProbe.watch(quoteRepository) //watching
+
+      within (1000 millis) {
+        var receivedQuotes = List[String]()
+        (1 to 3).foreach(_ => quoteRepository ! QuoteRequest)
+        receiveWhile() {
+          case QuoteResponse(quoteString) => {
+            receivedQuotes = receivedQuotes :+ quoteString
+          }
+        }
+
+        testProbe.unwatch(quoteRepository) //not watching anymore
+        receivedQuotes.size must be (3)
+        println(s"receiveCount ${receivedQuotes.size}")
+
+        //4th message
+        quoteRepository!QuoteRequest
+        testProbe.expectNoMsg() //Not Watching. No Terminated Message
+      }
+    }
+
+    "end back a termination message to the watcher on 4th message to the TeacherActor" in {
+      //This just subscribes to the EventFilter for messages.
+      //We have asserted all that we need against the QuoteRepositoryActor in the previous testcase
+      val teacherActor=TestActorRef[TeacherActorWatcher]
+
+      within (1000 millis) {
+        (1 to 3).foreach (_ => teacherActor!QuoteRequest) //this sends a message to the QuoteRepositoryActor
+
+        EventFilter.error (pattern="""Child Actor .* Terminated""", occurrences = 1).intercept{
+          teacherActor!QuoteRequest //Send the dangerous 4th message
+        }
+      }
+    }
+  }
+
+
 }
