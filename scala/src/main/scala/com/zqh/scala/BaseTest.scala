@@ -1,0 +1,136 @@
+package com.zqh.scala
+
+import net.sf.json.JSONObject
+
+/**
+ * Created by zhengqh on 15/8/11.
+ */
+object BaseTest {
+
+  def testCaseCond(): Unit ={
+    val num = 1
+    num match {
+      case n if n>0 => print("OK")
+      case _ => print("NO")
+    }
+  }
+
+  def testCompare(): Unit ={
+    def compareGenericType[T <: Ordered[T]](t1 : T, t2: T): Boolean ={
+      /*
+      var flag = false
+      if(t1.isInstanceOf[Integer]){
+        val v1 : Integer = t1.asInstanceOf[Integer]
+        val v2 : Integer = t1.asInstanceOf[Integer]
+        flag = v1 > v2
+      }else if(t1.isInstanceOf[String]){
+        val v1 : String = t1.asInstanceOf[String]
+        val v2 : String = t1.asInstanceOf[String]
+        flag = v1 > v2
+      }
+      flag
+      */
+      t1 > t2
+    }
+    def compare2[T](a:T, b:T)(implicit ordering:Ordering[T]) = {
+      import ordering._;
+      a > b
+    }
+    def max[T](a:T, b:T)(implicit ordering:Ordering[T]) = {
+      import ordering._;
+      if(a>b) a else b
+    }
+
+    //inferred type arguments [Int] do not conform to method compareGenericType's type parameter bounds [T <: Ordered[T]]
+    //compareGenericType(1,2)
+    max(1,2)
+    max("abc","ced")
+    compare2(1,2)
+    compare2("abc","cef")
+  }
+
+  //数据类型, Any测试
+  def testDataType(): Unit ={
+    //Any类型测试
+    val kvMap = scala.collection.mutable.Map[String, Any]()
+    kvMap += "1" -> 1.123
+    kvMap += "2" -> 2.0
+    kvMap += "3" -> "3String"
+
+    //scala.collection.mutable.Iterable[Class[_]] = ArrayBuffer(class java.lang.Double, class java.lang.Double, class java.lang.String)
+    val arrStr = kvMap.map(m=>{
+      m._2.getClass.toString
+      /*
+      m._2.getClass match{
+        case Int.getClass => "INT"
+        case Long.getClass => "LONG"
+        case Double.getClass => "DOUBLE"
+        case _ => "..."
+      }
+      */
+    })
+    //scala.collection.mutable.Iterable[String] = ArrayBuffer(Double, Double, String)
+    arrStr.map(e=>{
+      e match{
+        case "class java.lang.Double" => "Double"
+        case "class java.lang.String" => "String"
+      }
+    })
+
+    //枚举类
+    def testEnum: Unit = {
+      object DIMENSION extends Enumeration {
+        type DIMENSION = Value
+        val ACCOUNT = Value(0, "accountLogin")
+        val IPADDR = Value(1, "trueipAddress")
+        val DEVICE = Value(2, "deviceId")
+        val MOBILE = Value(3, "accountMobile")
+      }
+
+      val dimension2 = List(DIMENSION.ACCOUNT, DIMENSION.IPADDR, DIMENSION.DEVICE, DIMENSION.MOBILE)
+      dimension2.foreach(dim => {
+        //打印Value中的id和名称.
+        println(dim.id)
+        println(dim.toString)
+        //case匹配
+        dim match {
+          case DIMENSION.ACCOUNT => {
+          }
+          case _ =>
+        }
+      })
+
+      def doWithEnum(dim: DIMENSION.Value): Unit = {
+        println(dim.id)
+        println(dim.toString)
+      }
+
+      doWithEnum(DIMENSION.ACCOUNT)
+    }
+  }
+
+  def testJsonParse(): Unit ={
+    val jsonStr =
+      """
+        |{
+        |              "accountEmail": "zhangsan@163.com",
+        |              "accountLogin": "zhangsan",
+        |              "accountMobile": "13957108801",
+        |              "accountPhone": "051788662981",
+        |              "create": 1400233173196,
+        |              "deviceId": "8c6bedcc872185296e074cc881fa1d99",
+        |              "eventId": "download_click",
+        |              "ipAddress": "122.224.126.12",
+        |              "payAmount": 0,
+        |              "smartId": "203fff3e435725984e42c61499e1d1be",
+        |              "status": "ACC"
+        |            }
+      """.stripMargin
+    val json = JSONObject.fromObject(jsonStr)
+    println(json.get("accountLogin"))
+  }
+
+  def main (args: Array[String]) {
+    testJsonParse()
+  }
+}
