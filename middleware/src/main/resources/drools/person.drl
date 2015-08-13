@@ -1,0 +1,13 @@
+import com.zqh.rule.drools.Person
+
+dialect "mvel"
+
+/*
+ * This rule checks that a person is >= 21
+ */
+rule "Person is 21"
+    when
+        $person : Person(age>=21)
+    then
+        System.out.println($person.name);
+end
