@@ -18,13 +18,19 @@ public class RuleRunner {
     public static void main(String[] args) {
         RuleRunner runner = new RuleRunner();
 
-        String rule = "/Users/zhengqh/Github/tutorials/middleware/src/main/resources/drools/person.drl";
+        String ruleFile = "/Users/zhengqh/Github/tutorials/middleware/src/main/resources/drools/person.drl";
+        String rule = "drools/person.drl";
         Object[] facts = {
                 new Person("Jon Doe", 21),
                 new Person("Jon Doo", 22)
         };
 
         runner.runRules(rule,facts);
+
+        //--------------------------
+        ///Users/zhengqh/Github/tutorials/middleware/target/classes/drools/person.drl
+        System.out.println(ClassLoader.getSystemClassLoader().getResource(rule).getPath());
+
     }
 
     public void runRules(String ruleFile, Object[] facts) {
@@ -33,8 +39,11 @@ public class RuleRunner {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
         KieRepository kieRepository = kieServices.getRepository();
 
-        //Resource resource = kieResources.newClassPathResource("src/main/resources/drools/"+ruleFile);
-        Resource resource = kieResources.newFileSystemResource(ruleFile);
+        Resource resource = kieResources.newClassPathResource(ruleFile);
+        if(ruleFile.startsWith("/")){
+            resource = kieResources.newFileSystemResource(ruleFile);
+        }
+
         kieFileSystem.write("src/main/resources/drools/"+ruleFile, resource);
         //kieFileSystem.write(ruleFile, resource);
 
