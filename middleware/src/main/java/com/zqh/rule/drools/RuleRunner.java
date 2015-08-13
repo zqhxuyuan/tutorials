@@ -21,7 +21,7 @@ public class RuleRunner {
         String rule = "/Users/zhengqh/Github/tutorials/middleware/src/main/resources/drools/person.drl";
         Object[] facts = {
                 new Person("Jon Doe", 21),
-                new Person("Jon Doo", 20)
+                new Person("Jon Doo", 22)
         };
 
         runner.runRules(rule,facts);
