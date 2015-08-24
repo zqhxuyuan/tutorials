@@ -203,4 +203,23 @@ object CollectionTest {
     //Set((CTest(0),0), (CTest(0),3), (CTest(1),0), (CTest(1),2))
     println(possibilities3)
   }
+
+  def testForReturn(): Unit ={
+    val forRetNull = for(i <- 1 to 10){
+      ("index:"+i, i)
+    }
+    val forRet = (1 to 10).map(i=>{
+      ("index:"+i, i)
+    })
+    val forYield = for(i <- 1 to 10) yield{
+      ("index:"+i, i)
+    }
+    //IndexedSeq[IndexedSeq[(String, Int)]]
+    val doubleForYield = for(i <- 1 to 10; z <- 1 to 2) yield{
+      for(j <- 1 to 5) yield {
+        ("index:"+i+"-"+j, i*j)
+      }
+    }
+    doubleForYield.flatMap(x=>x) //IndexedSeq[(String, Int)]
+  }
 }
