@@ -381,5 +381,13 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
+
+        <!-- CEP -->
+        <dependency>
+            <groupId>com.espertech</groupId>
+            <artifactId>esper</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+
     </dependencies>
 </project>
