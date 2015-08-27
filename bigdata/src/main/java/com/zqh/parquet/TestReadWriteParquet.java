@@ -22,17 +22,17 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import parquet.Log;
-import parquet.example.data.Group;
-import parquet.hadoop.example.GroupWriteSupport;
-import parquet.hadoop.example.ExampleInputFormat;
-import parquet.hadoop.example.ExampleOutputFormat;
-import parquet.hadoop.metadata.CompressionCodecName;
-import parquet.hadoop.ParquetFileReader;
-import parquet.hadoop.metadata.ParquetMetadata;
-import parquet.schema.MessageType;
-import parquet.schema.MessageTypeParser;
-import parquet.schema.Type;
+import org.apache.parquet.Log;
+import org.apache.parquet.example.data.Group;
+import org.apache.parquet.hadoop.example.GroupWriteSupport;
+import org.apache.parquet.hadoop.example.ExampleInputFormat;
+import org.apache.parquet.hadoop.example.ExampleOutputFormat;
+import org.apache.parquet.hadoop.metadata.CompressionCodecName;
+import org.apache.parquet.hadoop.ParquetFileReader;
+import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.schema.MessageType;
+import org.apache.parquet.schema.MessageTypeParser;
+import org.apache.parquet.schema.Type;
 
 /**
  * Input is a Parquet format, then output the parquet file's metadata and data

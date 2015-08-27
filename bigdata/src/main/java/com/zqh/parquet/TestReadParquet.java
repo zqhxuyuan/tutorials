@@ -22,18 +22,21 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-//import org.apache.parquet.Log;
-//import org.apache.parquet.example.data.Group;
-//import org.apache.parquet.hadoop.ParquetInputSplit;
-//import org.apache.parquet.hadoop.example.ExampleInputFormat;
+import org.apache.parquet.Log;
+import org.apache.parquet.example.data.Group;
+import org.apache.parquet.hadoop.ParquetFileReader;
+import org.apache.parquet.hadoop.ParquetInputSplit;
+import org.apache.parquet.hadoop.example.ExampleInputFormat;
+import org.apache.parquet.hadoop.metadata.ParquetMetadata;
+import org.apache.parquet.schema.MessageType;
 
-import parquet.Log;
-import parquet.example.data.Group;
-import parquet.hadoop.ParquetFileReader;
-import parquet.hadoop.ParquetInputSplit;
-import parquet.hadoop.example.ExampleInputFormat;
-import parquet.hadoop.metadata.ParquetMetadata;
-import parquet.schema.MessageType;
+//import parquet.Log;
+//import parquet.example.data.Group;
+//import parquet.hadoop.ParquetFileReader;
+//import parquet.hadoop.ParquetInputSplit;
+//import parquet.hadoop.example.ExampleInputFormat;
+//import parquet.hadoop.metadata.ParquetMetadata;
+//import parquet.schema.MessageType;
 
 /**
  * http://blog.cloudera.com/blog/2014/03/how-to-use-parquet-with-impala-hive-pig-mapreduce/
