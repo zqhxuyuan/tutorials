@@ -2,6 +2,9 @@ package com.zqh.scala
 
 import java.util.concurrent.{ConcurrentHashMap, LinkedBlockingQueue}
 
+/**
+ * https://github.com/shirdrn/scala-learning
+ */
 sealed trait Event
 
 sealed trait UserEvent extends Event
