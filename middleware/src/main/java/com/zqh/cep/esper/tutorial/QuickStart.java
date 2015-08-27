@@ -1,9 +1,9 @@
 package com.zqh.cep.esper.tutorial;
 
-import com.espertech.esper.client.Configuration;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
-import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.*;
+import com.espertech.esper.core.service.EPServiceProviderImpl;
+
+import java.util.Random;
 
 /**
  * @see http://www.espertech.com/esper/quickstart.php
@@ -33,7 +33,7 @@ public class QuickStart {
         // The next code snippet obtains an engine instance and registers a continuous query. The query returns the average price over all OrderEvent
         // events that arrived in the last 30 seconds:
         EPServiceProvider epServiceProvider = EPServiceProviderManager.getDefaultProvider(configuration);
-        String expression = "select avg(price) from OrderEvent.win:time(30 sec)";
+        String expression = "select avg(price) from OrderEvent.win:time(60 sec)";
         EPStatement epStatement = epServiceProvider.getEPAdministrator().createEPL(expression);
 
         // By attaching the listener to the statement the engine provides the statement's results to the listener:
@@ -44,9 +44,15 @@ public class QuickStart {
         // The runtime API accepts events for processing. As a statement's results change, the engine indicates the new results to listeners right
         // when the events are processed by the engine.
         // Sending events is straightforward as well:
-        OrderEvent orderEvent = new OrderEvent("shirt", 75.50D);
-        epServiceProvider.getEPRuntime().sendEvent(orderEvent);
+        EPRuntime runtime = epServiceProvider.getEPRuntime();
 
+        OrderEvent orderEvent = new OrderEvent("shirt", 75.50D);
+        runtime.sendEvent(orderEvent);
+
+        for(int i=0;i<100000;i++){
+            OrderEvent event = new OrderEvent("shirt", new Random().nextInt(100));
+            runtime.sendEvent(event);
+        }
     }
 
 }
