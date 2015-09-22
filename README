@@ -12,3 +12,10 @@ scala
 bigdata : hadoop echo-system
 
 soa : dubbo,
+
+
+## Requirements
+
+exclude scala/docs
+
+add middleware/*.jar to classpath

@@ -130,6 +130,19 @@ object BaseTest {
     println(json.get("accountLogin"))
   }
 
+  def testTuple(): Unit ={
+    def toTuple[A <: Object](as:List[A]):Product = {
+      val tupleClass = Class.forName("scala.Tuple" + as.size)
+      tupleClass.getConstructors.apply(0).newInstance(as:_*).asInstanceOf[Product]
+    }
+
+    val t1 = toTuple(List("hello", "world"))
+    val t2 = toTuple(List("hello", "world", "scala"))
+
+    t1.isInstanceOf[Tuple2[String,String]]
+    t1 == ("hello","world")
+  }
+
   def main (args: Array[String]) {
     testJsonParse()
   }
