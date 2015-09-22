@@ -222,4 +222,9 @@ object CollectionTest {
     }
     doubleForYield.flatMap(x=>x) //IndexedSeq[(String, Int)]
   }
+
+  //删除数组元素
+  implicit class Foo[T](as: Array[T]) {
+    def dropping(i: Int) = as.view.take(i) ++ as.view.drop(i+1)
+  }
 }
