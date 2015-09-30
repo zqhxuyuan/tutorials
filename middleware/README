@@ -1,6 +1,4 @@
 
 src/main/thrift/gen-java : mark directory as generated source root
 
-com.zqh.midd.lucene: exclude
-
-lib/zookeeper-test.jar: add as a library
+lib/*.jar: add as a library

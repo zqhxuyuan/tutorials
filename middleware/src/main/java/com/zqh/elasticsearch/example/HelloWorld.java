@@ -16,6 +16,8 @@ import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
  * http://www.elasticsearch.org/guide
  *
  * http://www.elasticsearch.org/guide/en/elasticsearch/client/java-api/current/client.html
+ *
+ * https://gist.github.com/1639766
  */
 public class HelloWorld {
 

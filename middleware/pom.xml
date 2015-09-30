@@ -33,7 +33,8 @@
         <avro.version>1.7.7</avro.version>
 
         <drools-version>6.1.0.Final</drools-version>
-
+        <hazelcast.version>3.5.2</hazelcast.version>
+        <vertx.version>3.0.0</vertx.version>
     </properties>
 
     <dependencies>
@@ -142,11 +143,13 @@
         </dependency>
 
         <!--Search-->
+        <!--
         <dependency>
             <groupId>net.paoding</groupId>
             <artifactId>paoding-analysis</artifactId>
             <version>${paoding.version}</version>
         </dependency>
+        -->
         <dependency>
             <groupId>com.chenlb.mmseg4j</groupId>
             <artifactId>mmseg4j-analysis</artifactId>
@@ -154,15 +157,22 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>4.10.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
             <version>${es.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.1.3</version>
         </dependency>
+        -->
         <dependency>
             <groupId>io.searchbox</groupId>
             <artifactId>jest</artifactId>
@@ -388,6 +398,34 @@
             <artifactId>esper</artifactId>
             <version>5.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-client</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>galaxy</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-hazelcast</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
 
     </dependencies>
 </project>
