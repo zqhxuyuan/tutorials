@@ -143,7 +143,37 @@ object BaseTest {
     t1 == ("hello","world")
   }
 
-  def main (args: Array[String]) {
-    testJsonParse()
+  def testSelfType(): Unit ={
+    val vec3_1 = new Vec3(2.0, 4.0, 8.0)
+    val vec3_2 = new Vec3(1.0, 2.0, 3.0)
+    val subVec3 = vec3_1 - vec3_2
+    println(subVec3)
   }
+
+  def main (args: Array[String]): Unit = {
+    testSelfType()
+  }
+}
+
+//stackoverflow.com/questions/4776864/scala-self-type-value-is-not-a-member-error
+trait Vec[V <: Vec[V]] { self: V =>
+  def -(v:V): V
+  def /(d:Double): V
+  def dot(v:V): Double
+
+  def norm:Double = math.sqrt(this dot this)
+  def normalize: V = self / norm
+  def dist(v: V) = (self - v).norm
+  def nasty(v: V) = (self / norm).norm
+}
+class Vec3(val x:Double, val y:Double, val z:Double) extends Vec[Vec3] {
+  def -(d:Vec3) = new Vec3(x-d.x, y-d.y, z-d.z)
+  def /(d:Double) = new Vec3(x / d, y / d, z / d)
+  def dot(v:Vec3) = x * v.x + y * v.y + z * v.z
+  def cross(v:Vec3):Vec3 = {
+    val (a, b, c) = (v.x, v.y, v.z)
+    new Vec3(c * y - b * z, a * z - c * x, b * x - a * y)
+  }
+  def perpTo(v:Vec3) = (this.normalize).cross(v.normalize)
+  override def toString() = x + "," + y + "," + z
 }

@@ -386,19 +386,14 @@
             <artifactId>drools-compiler</artifactId>
             <version>${drools-version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
 
-        <!-- CEP -->
-        <dependency>
-            <groupId>com.espertech</groupId>
-            <artifactId>esper</artifactId>
-            <version>5.2.0</version>
-        </dependency>
-
+        <!-- Distributed Cache -->
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>

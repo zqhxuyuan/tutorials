@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by zhengqh on 15/9/28.
  */
-public class JSONOrder {
+public class JSONOrderTest {
 
     public static void main(String[] args) {
         ActivityDetailDO activityDO = new ActivityDetailDO();

@@ -1,3 +1,6 @@
 20150804
-
 Exclude scala/docs as AkkaSpec is not in binary package.
+
+20151013
+move scala/docs to parent
+

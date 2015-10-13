@@ -2,3 +2,8 @@ http://boldradius.com/blog-post/VS0NpTAAADAACs_E/introduction-to-akka-streams
 http://bryangilbert.com/blog/2015/02/04/akka-reactive-streams/
 
 https://github.com/pkinsky/akka-streams-example
+
+www.franklysauer.com/2014/05/cep-using-akka-streams/
+https://github.com/fsauer65/akka-esper-integration/blob/master/src/main/scala/experiments/streams/StreamCEP.scala
+
+http://blog.scalac.io/2014/06/23/akka-streams-and-rabbitmq.html
