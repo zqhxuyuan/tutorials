@@ -1,5 +1,3 @@
-package com.zqh.scala
-
 import net.sf.json.JSONObject
 
 /**

@@ -40,7 +40,6 @@
         <giraph.version>1.1.0-hadoop2</giraph.version>
         <flink.version>0.8.0</flink.version>                <!-- 0.7.0-hadoop2-incubating -->
         <tez.version>0.6.0</tez.version>                    <!-- 0.5.3-->
-        <cascading.version>2.6.1</cascading.version>
         <samza.version>0.8.0</samza.version>
     </properties>
 
@@ -360,58 +359,6 @@
             <groupId>org.apache.tez</groupId>
             <artifactId>tez-examples</artifactId>
             <version>${tez.version}</version>
-        </dependency>
-
-        <!-- cascading -->
-        <dependency>
-            <groupId>driven</groupId>
-            <artifactId>driven-plugin</artifactId>
-            <version>1.2-eap-5</version><!--1.1.1-eap-13,1.2-eap-5-->
-        </dependency>
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-core</artifactId>
-            <version>${cascading.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-local</artifactId>
-            <version>${cascading.version}</version>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-hadoop</artifactId>
-            <version>${cascading.version}</version>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-hadoop2-mr1</artifactId>
-            <version>${cascading.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>hadoop-mapreduce-client-common</artifactId>
-                    <groupId>org.apache.hadoop</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-xml</artifactId>
-            <version>${cascading.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cascading</groupId>
-            <artifactId>cascading-platform</artifactId>
-            <version>${cascading.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>scalding-core_2.10</artifactId>
-            <version>0.13.0</version>
         </dependency>
 
         <dependency>

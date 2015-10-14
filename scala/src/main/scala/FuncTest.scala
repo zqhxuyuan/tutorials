@@ -1,5 +1,3 @@
-package com.zqh.scala
-
 /**
  * Created by zhengqh on 15/9/11.
  */

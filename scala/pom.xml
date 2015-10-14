@@ -92,6 +92,11 @@
             <artifactId>akka-stream-experimental_2.10</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-async_2.10</artifactId>
+            <version>0.9.5</version>
+        </dependency>
 
 
         <dependency>
