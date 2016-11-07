@@ -1,4 +1,4 @@
-import com.zqh.rule.drools.Person
+import com.zqh.drools.Person
 
 dialect "mvel"
 

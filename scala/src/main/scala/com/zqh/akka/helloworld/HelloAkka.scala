@@ -1,6 +1,7 @@
 package com.zqh.akka.helloworld
 
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.pattern.ask
 
 /**
  * Output:

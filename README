@@ -16,10 +16,10 @@ soa : dubbo,
 
 ## Requirements
 
-exclude scala/docs
-
 add middleware/*.jar to classpath
 
+
+## Java8
 
 关于java8运行时idea提示: Error:java: Compilation failed: internal java compiler error 解决办法:
 (1):打开Project Structure->Modules->Dependencies->Module SDK选择1.8
